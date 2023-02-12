@@ -1,0 +1,3 @@
+php artisan migrate:fresh --path=application/Modules/Core/Logs/Migrations/logs --database=db_log
+php artisan migrate:fresh --seed
+

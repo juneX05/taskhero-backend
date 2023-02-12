@@ -1,0 +1,70 @@
+{
+    "permissions": [
+        {
+            "name": "view_users",
+            "title": "View Users",
+            "description": "View Users of the System",
+            "module_id": "2"
+        },
+        {
+            "name": "view_user",
+            "title": "View User",
+            "description": "View User details of the System",
+            "module_id": "2"
+        },
+        {
+            "name": "save_user",
+            "title": "Save User",
+            "description": "Create a user in the system.",
+            "module_id": "2"
+        },
+        {
+            "name": "view_user",
+            "title": "View User Details",
+            "description": "View user details",
+            "module_id": "2"
+        },
+        {
+            "name": "change_user_status",
+            "title": "Change User Status",
+            "description": "Permission to change user status. From either active or in-active",
+            "module_id": "2"
+        },
+        {
+            "name": "change_password",
+            "title": "Change User Password",
+            "description": "Permission to change password",
+            "module_id": "2"
+        },
+        {
+            "name": "change_user_permissions",
+            "title": "Change User Permissions",
+            "description": "Permission to change user permissions",
+            "module_id": "2"
+        },
+        {
+            "name": "change_user_roles",
+            "title": "Change User Roles",
+            "description": "Permission to change user roles",
+            "module_id": "2"
+        }
+    ],
+    "data" : [
+        {
+            "name": "Developer Admin",
+            "email": "admin@gmail.com",
+            "password": "secretss",
+            "user_id": -1,
+            "user_status_id": 1,
+            "user_type_id": 1
+        },
+        {
+            "name": "Demo User",
+            "email": "user@gmail.com",
+            "password": "secretss",
+            "user_id": -1,
+            "user_status_id": 1,
+            "user_type_id": 2
+        }
+    ]
+}

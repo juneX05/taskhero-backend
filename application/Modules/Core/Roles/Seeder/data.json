@@ -1,0 +1,66 @@
+{
+    "data": [
+        {
+            "name": "developer",
+            "title": "Developer",
+            "description": "These are the developers of the system",
+            "color": "blue",
+            "user_id": "1",
+            "status_id": "1"
+        },
+        {
+            "name": "super_admin",
+            "title": "Super Admin",
+            "description": "Super Admin of the system trained by developers to manage the system by themselves",
+            "color": "indigo",
+            "user_id": "1",
+            "status_id": "1"
+        },
+        {
+            "name": "member",
+            "title": "Member",
+            "description": "Member of the system using the membership process",
+            "color": "green",
+            "user_id": "1",
+            "status_id": "1"
+        }
+    ],
+    "permissions": [
+        {
+            "name": "view_roles",
+            "title": "View Roles",
+            "description": "Permission to view system roles",
+            "module_id": "3"
+        },
+        {
+            "name": "view_role",
+            "title": "View Role",
+            "description": "Permission to view system role details",
+            "module_id": "3"
+        },
+        {
+            "name": "update_role",
+            "title": "Update Role",
+            "description": "Permission to update system role details",
+            "module_id": "3"
+        },
+        {
+            "name": "save_role",
+            "title": "Save Role",
+            "description": "Permission to save system role",
+            "module_id": "3"
+        },
+        {
+            "name": "change_role_permissions",
+            "title": "Change Role Permissions",
+            "description": "Permission to change system role permissions",
+            "module_id": "3"
+        },
+        {
+            "name": "change_role_status",
+            "title": "Change Role Status",
+            "description": "Permission to change system role status",
+            "module_id": "3"
+        }
+    ]
+}

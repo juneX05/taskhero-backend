@@ -1,0 +1,19 @@
+{
+    "data": [
+        {
+            "name" : "active",
+            "title" : "Active",
+            "color" : "green"
+        },
+        {
+            "name" : "inactive",
+            "title" : "Inactive",
+            "color" : "red"
+        },
+        {
+            "name" : "pending",
+            "title" : "Pending",
+            "color" : "orange"
+        }
+    ]
+}

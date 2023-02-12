@@ -1,0 +1,13 @@
+{
+    "permissions": [
+        {
+            "name": "view_logs",
+            "title": "View Logs",
+            "description": "View System Logs",
+            "module_id": "6",
+            "updated_at": "2022-12-27 11:29:57",
+            "urid": "482bdf639b3267c362895e4ced97faa3954d5543"
+        }
+    ],
+    "data": []
+}

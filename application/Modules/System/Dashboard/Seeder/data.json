@@ -1,0 +1,22 @@
+{
+    "permissions": [
+        {
+            "name": "view_developers_dashboard",
+            "title": "View Developers Dashboard",
+            "description": "Permission to view developers dashboard",
+            "module_id": "4"
+        },
+        {
+            "name": "view_super_admins_dashboard",
+            "title": "View Super Admins Dashboard",
+            "description": "Permission to view super admins dashboard",
+            "module_id": "4"
+        },
+        {
+            "name": "view_admins_dashboard",
+            "title": "View Admins Dashboard",
+            "description": "Permission to view admins dashboard",
+            "module_id": "4"
+        }
+    ]
+}

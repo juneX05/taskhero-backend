@@ -1,0 +1,52 @@
+{
+    "data": [
+        {
+            "name": "developer",
+            "table": "developers",
+            "title": "Developer",
+            "description": "",
+            "color": "yellow",
+            "user_id": "1"
+        },
+        {
+            "name": "super_admin",
+            "table": "super_admins",
+            "title": "Super Admin",
+            "description": "",
+            "color": "indigo",
+            "user_id": "1"
+        },
+        {
+            "name": "admin",
+            "table": "admins",
+            "title": "Admin",
+            "description": "",
+            "color": "violet",
+            "user_id": "1"
+        },
+        {
+            "name": "teacher",
+            "table": "teachers",
+            "title": "Teacher",
+            "description": "",
+            "color": "orange",
+            "user_id": "1"
+        },
+        {
+            "name": "student",
+            "table": "students",
+            "title": "Student",
+            "description": "",
+            "color": "blue",
+            "user_id": "1"
+        },
+        {
+            "name": "accountant",
+            "table": "accountants",
+            "title": "Accountant",
+            "description": "",
+            "color": "green",
+            "user_id": "1"
+        }
+    ]
+}
