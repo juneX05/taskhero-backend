@@ -1,6 +1,7 @@
 <?php
 
 use Application\Modules\Core\Menus\Menus_Controller;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/menus', [Menus_Controller::class,'index']);
 Route::get('/menus/routes', [Menus_Controller::class,'menuRoutes']);

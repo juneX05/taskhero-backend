@@ -1,6 +1,7 @@
 <?php
 
 use Application\Modules\Core\Modules\Modules_Controller;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')
     ->prefix('/modules')

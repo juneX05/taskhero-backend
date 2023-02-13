@@ -88,17 +88,19 @@ class Auth_Actions
         }
 
         logInfo(__FUNCTION__,[
-            'actor_id' => $user->urid,
+            'actor_id' => $request->user()->urid,
             'actor' => self::$ACTOR,
             'action_description' => 'User Logged Out',
-            'old_data' => json_encode($user),
+            'old_data' => json_encode($request->user()),
             'new_data' => json_encode([]),
         ],'USER-LOGOUT');
 
-        return sendResponse('User Data', $user);
+        return sendResponse('User Logged Out', null);
     }
 
     public static function currentUser() {
+        if(!verifyRequest()) return sendError('Unauthenticated', 401);
+
         $user = request()->user();
 
         $sidebar_menus = Menus_Actions::sidebarMenus();

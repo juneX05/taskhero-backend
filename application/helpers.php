@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 
 function logInfo($tag, $data, $action_type = 'LOG')
 {
@@ -206,5 +207,13 @@ function validateData($request_data, $rules) {
 
 function dde($data) {
     echo json_encode($data, JSON_PRETTY_PRINT); exit;
+}
+
+function verifyRequest() {
+    $token = PersonalAccessToken::findToken(request()->bearerToken());
+
+    if ($token) return true;
+
+    return false;
 }
 

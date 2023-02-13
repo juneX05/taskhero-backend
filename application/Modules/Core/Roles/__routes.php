@@ -1,6 +1,7 @@
 <?php
 
 use Application\Modules\Core\Roles\Roles_Controller;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')
     ->group(function () {
