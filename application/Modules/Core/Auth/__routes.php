@@ -8,6 +8,16 @@ Route::post('/login', [
     'login'
 ]);
 
+Route::post('/forgot-password', [
+    Auth_Controller::class,
+    'forgotPassword'
+]);
+
+Route::post('/password/reset', [
+    Auth_Controller::class,
+    'resetPassword'
+]);
+
 Route::middleware('auth:sanctum')
     ->group(function () {
         Route::post('/logout', [

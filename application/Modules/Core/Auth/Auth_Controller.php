@@ -29,4 +29,13 @@ class Auth_Controller extends BaseController
     public function user() {
         return Auth_Actions::currentUser();
     }
+
+    //https://victorighalo.medium.com/custom-password-reset-in-laravel-21e57816989f
+    public function forgotPassword(Request $request) {
+        return Auth_Actions::forgotPassword($request->all());
+    }
+
+    public function resetPassword(Request $request) {
+        return Auth_Actions::resetPassword($request->all());
+    }
 }

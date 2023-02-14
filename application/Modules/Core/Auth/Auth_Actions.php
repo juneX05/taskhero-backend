@@ -4,11 +4,17 @@
 namespace Application\Modules\Core\Auth;
 
 
+use Application\Modules\BaseModel;
 use Application\Modules\Core\Menus\Menus_Actions;
 use Application\Modules\Core\Users\Users_Model;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class Auth_Actions
@@ -117,5 +123,110 @@ class Auth_Actions
             'menus' => $sidebar_menus
         ];
         return sendResponse('User Data',$response );
+    }
+
+    public static function forgotPassword($request_data) {
+        $validation = validateData($request_data, [
+            'email' => ['required','email']
+        ]);
+
+        if (!$validation['status']) return sendValidationError($validation['error']);
+
+        $data = $validation['data'];
+
+        $user = Users_Model::whereEmail($data['email'])->first();
+
+        if (!$user) {
+            return sendError('User not Found', 404);
+        }
+
+        $data['token'] = Str::random(60);
+        $data['created_at'] = date('Y-m-d H:i:s');
+
+        DB::table('password_resets')->insert($data);
+
+        $reset_password = DB::table('password_resets')
+            ->where('token', $data['token'])->first();
+
+        $token = $reset_password->token;
+
+        if (self::sendResetEmail($user, $token)) {
+            return sendResponse('A reset link has been sent to your email address.');
+        } else {
+            return sendError('A Network Error occurred. Please try again.', 500);
+        }
+    }
+
+    private static function sendResetEmail(Users_Model $user, $token)
+    {
+        //Generate, the password reset link. The token generated is embedded in the link
+        $link = env('APP_URL') . '/api/password/reset?token=' . $token . '&email=' . urlencode($user->email);
+
+        try {
+            //Here send the link with CURL with an external email API
+            Mail::raw($link
+                , function ($message) use ($user) {
+                $message->to($user->email, $user->name)->subject('Reset Password Email');
+                $message->from('joelvankibona@gmail.com', 'Joel Kibona');
+            });
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function resetPassword($request_data) {
+
+        $validation = validateData($request_data, [
+            'email' => ['required','email'],
+            'password' => 'required|confirmed',
+            'token' => 'required'
+        ]);
+
+        if (!$validation['status']) return sendValidationError($validation['error']);
+
+        $data = $validation['data'];
+
+        $user = Users_Model::whereEmail($data['email'])->first();
+        if (!$user) {
+            return sendError('Not Found', 404);
+        }
+
+        $reset_password = DB::table('password_resets')
+            ->where('token', $data['token'])->first();
+
+        if (!$reset_password) {
+            return sendError('Invalid Token', 404);
+        }
+
+        $update = $user->update(['password' => bcrypt($data['password'])]);
+        if (!$update) {
+            return sendError('Failed to Reset Password', 500);
+        }
+
+        DB::table('password_resets')
+            ->where('token', $data['token'])->delete();
+
+        if (self::sendResetSuccessfulEmail($user)) {
+            return sendResponse('A reset link has been sent to your email address.');
+        } else {
+            return sendError('A Network Error occurred. Please try again.', 500);
+        }
+    }
+
+    private static function sendResetSuccessfulEmail(Users_Model $user)
+    {
+        //Generate, the password reset link. The token generated is embedded in the link
+        try {
+            //Here send the link with CURL with an external email API
+            Mail::raw('Your Password has been updated successfully'
+                , function ($message) use ($user) {
+                    $message->to($user->email, $user->name)->subject('Password Reset Successful');
+                    $message->from('joelvankibona@gmail.com', 'Joel Kibona');
+                });
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

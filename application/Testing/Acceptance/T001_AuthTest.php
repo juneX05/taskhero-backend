@@ -2,6 +2,7 @@
 namespace Application\Testing\Acceptance;
 
 use Application\Testing\BaseTest;
+use Illuminate\Support\Facades\DB;
 
 class T001_AuthTest extends BaseTest
 {
@@ -46,6 +47,33 @@ class T001_AuthTest extends BaseTest
 
         $response->assertStatus(401);
         $response->assertJsonPath('status', false);
+    }
+
+    public function test_user_can_initiate_forgot_password() {
+        $response = $this->sendAuthorizedRequest('/api/forgot-password', 'POST', [
+            'email' => 'user@gmail.com'
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+    }
+
+    public function test_user_can_reset_password() {
+
+        $reset_token = DB::table('password_resets')->where('email', 'user@gmail.com')->first();
+        $reset_token = (array) $reset_token;
+
+        $data=[
+            'email' => 'user@gmail.com',
+            'token' => $reset_token['token'],
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ];
+
+        $response = $this->sendAuthorizedRequest("/api/password/reset", 'POST', $data);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
     }
 
 }

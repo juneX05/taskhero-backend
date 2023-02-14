@@ -66,7 +66,7 @@ class ApplicationBootstrapper
         Config::set('database.connections.db_log', [
             'driver' => 'sqlite',
             'url' => env('LOG_DATABASE_URL'),
-            'database' => env('LOG_DB_DATABASE', database_path('db_log.sqlite')),
+            'database' => database_path(env('LOG_DB_DATABASE', 'db_log.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ]);
