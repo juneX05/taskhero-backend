@@ -71,36 +71,20 @@ class ApplicationBootstrapper
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ]);
 
-        /**
-         * DATABASE FOR TESTING AND PRODUCTION CONFIGURATION
-         */
-        $db = 'database.sqlite';
-
-        $testing_file = json_decode(file_get_contents(application_path() . "/testing.json"), true);
-        if ($testing_file['testing']) {
-            $db =  'testing_db.sqlite';
-            Config::set('session.domain','localhost');
-            Config::set('sanctum.stateful',['localhost']);
+        if (!file_exists(database_path('database.sqlite'))) {
+            file_put_contents(database_path('database.sqlite'),'');
         }
 
-        Config::set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            'url' => env('LOG_DATABASE_URL'),
-            'database' => database_path($db),
-            'prefix' => '',
-            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-        ]);
-
-        if (!file_exists(database_path($db))) {
-            file_put_contents(database_path($db),'');
+        if (!file_exists(database_path('database_testing.sqlite'))) {
+            file_put_contents(database_path('database_testing.sqlite'),'');
         }
 
         if (!file_exists(database_path('db_log.sqlite'))) {
             file_put_contents(database_path('db_log.sqlite'),'');
         }
 
-        if (!file_exists(database_path('testing_db.sqlite'))) {
-            file_put_contents(database_path('testing_db.sqlite'),'');
+        if (!file_exists(database_path('db_log_testing.sqlite'))) {
+            file_put_contents(database_path('db_log_testing.sqlite'),'');
         }
 
         $allowed_origins = Config::get('cors.allowed_origins');

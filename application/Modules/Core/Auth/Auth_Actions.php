@@ -79,8 +79,14 @@ class Auth_Actions
 
     public static function logout() {
         $request = request();
-        if ($request->bearerToken())
-            PersonalAccessToken::findToken($request->bearerToken())->delete();
+        if ($request->bearerToken()) {
+            $token = PersonalAccessToken::findToken($request->bearerToken());
+            if ($token == null) {
+                return sendError('Invalid Token', 500);
+            }
+
+            $token->delete();
+        }
         else {
             $user = $request->user();
             $user->tokens()->where('id', auth()->id())->delete();
