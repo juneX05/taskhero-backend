@@ -11,7 +11,7 @@
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions">
-    <img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+    <img src="https://github.com/JuneX05/taskhero-backend/workflows/tests/badge.svg" alt="Build Status"></a>
 </p>
 
 <h1 align="center">
@@ -29,11 +29,11 @@ Its aim is to organize tasks in an elegant way and quicker.
 - [x] Completed Feature
 
 ### Features List
-- [ ] Authentication
+- [x] Authentication
   - [x] User Login
   - [x] User Logout
   - [x] Forgot Password
-  - [ ] User Registration
+  - [x] User Registration
 - [ ] Profile
 - [ ] User Management
   - [ ] User Create
