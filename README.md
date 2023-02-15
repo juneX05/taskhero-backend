@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions">
-    <img src="https://github.com/JuneX05/taskhero-backend/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://github.com/juneX05/taskhero-backend/actions">
+    <img src="https://github.com/juneX05/taskhero-backend/actions/workflows/tests.yml/badge.svg" alt="Build Status"></a>
 </p>
 
 <h1 align="center">
