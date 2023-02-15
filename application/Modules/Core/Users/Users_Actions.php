@@ -21,6 +21,11 @@ use Monolog\Handler\IFTTTHandler;
 
 class Users_Actions
 {
+    const USER_ACTIVE_STATUS = 1;
+    const USER_INACTIVE_STATUS = 2;
+    const USER_PENDING_STATUS = 3;
+
+
     private static $ACTOR = 'Users';
 
     public static function index() {

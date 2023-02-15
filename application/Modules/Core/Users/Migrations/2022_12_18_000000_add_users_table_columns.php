@@ -16,15 +16,13 @@ class AddUsersTableColumns extends Migration
     {
         Schema::table($this->table, function (Blueprint $table) {
             $table->integer('user_status_id')->nullable();
-            $table->integer('user_id')->nullable();
+            $table->integer('created_by')->nullable();
             $table->integer('user_type_id')->nullable();
             $table->string('urid')->unique()->nullable();
         });
 
         Schema::table($this->table, function (Blueprint $table) {
             $table->integer('user_status_id')->nullable(false)->change();
-            $table->integer('user_id')->nullable(false)->change();
-            $table->integer('user_type_id')->nullable(false)->change();
             $table->string('urid')->nullable(false)->change();
         });
     }

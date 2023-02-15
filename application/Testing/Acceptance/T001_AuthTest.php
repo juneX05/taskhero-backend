@@ -13,6 +13,20 @@ class T001_AuthTest extends BaseTest
     }
     JSON;
 
+    public function test_user_can_register()
+    {
+        $data = [
+            'name' => 'New User',
+            'email' => 'new_user@gmail.com',
+            'password' => 'newpassword',
+            'confirm_password' => 'newpassword'
+        ];
+        $response = $this->post('/api/register', $data);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+    }
+
     public function test_user_can_login()
     {
         $response = $this->post('/api/login', json_decode($this->data, true));
@@ -71,6 +85,18 @@ class T001_AuthTest extends BaseTest
         ];
 
         $response = $this->sendAuthorizedRequest("/api/password/reset", 'POST', $data);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+    }
+
+    public function test_user_can_login_with_new_password_after_resetting() {
+        $data=[
+            'email' => 'user@gmail.com',
+            'password' => 'password',
+        ];
+
+        $response = $this->sendAuthorizedRequest("/api/login", 'POST', $data);
 
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);

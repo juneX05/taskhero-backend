@@ -38,4 +38,8 @@ class Auth_Controller extends BaseController
     public function resetPassword(Request $request) {
         return Auth_Actions::resetPassword($request->all());
     }
+
+    public function register(Request $request) {
+        return Auth_Actions::register($request->all());
+    }
 }

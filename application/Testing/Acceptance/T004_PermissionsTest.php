@@ -3,7 +3,7 @@ namespace Application\Testing\Acceptance;
 
 use Application\Testing\BaseTest;
 
-class T004_PermissionsTests extends BaseTest
+class T004_PermissionsTest extends BaseTest
 {
     private $data = <<<JSON
     {

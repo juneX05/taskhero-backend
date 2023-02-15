@@ -8,6 +8,11 @@ Route::post('/login', [
     'login'
 ]);
 
+Route::post('/register', [
+    Auth_Controller::class,
+    'register'
+]);
+
 Route::post('/forgot-password', [
     Auth_Controller::class,
     'forgotPassword'

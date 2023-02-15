@@ -6,6 +6,7 @@ namespace Application\Modules\Core\Auth;
 
 use Application\Modules\BaseModel;
 use Application\Modules\Core\Menus\Menus_Actions;
+use Application\Modules\Core\Users\Users_Actions;
 use Application\Modules\Core\Users\Users_Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -228,5 +229,25 @@ class Auth_Actions
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public static function register($request_data) {
+        $validation = validateData($request_data, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        if (!$validation['status']) return sendValidationError($validation['error']);
+
+        $data = $validation['data'];
+
+        $data['user_status_id'] = Users_Actions::USER_PENDING_STATUS;
+        $user = Users_Model::create($data);
+
+        if (!$user) return sendError('Registration Failed', 500);
+
+        return sendResponse('Registration Successful');
     }
 }
