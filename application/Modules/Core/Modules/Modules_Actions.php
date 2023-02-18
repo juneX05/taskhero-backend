@@ -21,7 +21,6 @@ class Modules_Actions
                 ::join('status', 'status.id','modules.status_id')
                 ->select(['modules.*', 'status.name as status', 'status.color as status_color'])
                 ->get();
-            ;
 
 
             return sendResponse('Success', $all_data);

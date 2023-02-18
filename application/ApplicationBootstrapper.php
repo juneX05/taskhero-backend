@@ -56,6 +56,39 @@ class ApplicationBootstrapper
 
     }
 
+    public static function initModules(ApplicationServiceProvider $provider) {
+
+        $module_directories = self::getApplicationModulesList();
+
+        foreach ($module_directories as $directory) {
+            self::processModule($directory, $provider);
+        }
+
+        ApplicationBootstrapper::getRoutes(base_path('/application'));
+
+        ApplicationBootstrapper::setUpConfigurations();
+    }
+
+    private static function processModule($directory, ApplicationServiceProvider $provider){
+        //1. begin module processing
+        ApplicationBootstrapper::getRoutes($directory);
+
+        $provider->migrationsLoader($directory);
+
+        //2. CHECK IF MODULE HAS INNER MODULES AND PROCESS THEM
+
+        if (is_dir($directory . '/_Modules')) {
+
+            $module_directories = File::directories($directory . '/_Modules');
+
+            foreach ($module_directories as $directory) {
+                self::processModule($directory, $provider);
+            }
+
+        }
+
+    }
+
     public static function setUpConfigurations()
     {
         Config::set('auth.providers.users', [

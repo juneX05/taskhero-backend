@@ -30,7 +30,7 @@ class ApplicationServiceProvider extends ServiceProvider
             ApplicationExceptionHandler::class
         );
 
-        $this->processModules();
+        ApplicationBootstrapper::initModules($this);
     }
 
     public function register()
@@ -38,17 +38,8 @@ class ApplicationServiceProvider extends ServiceProvider
         //
     }
 
-    private function processModules() {
-        $module_directories = ApplicationBootstrapper::getApplicationModulesList();
-
-        foreach ($module_directories as $directory) {
-            ApplicationBootstrapper::getRoutes($directory);
-            $this->loadMigrationsFrom($directory . '/Migrations');
-        }
-
-        ApplicationBootstrapper::getRoutes(base_path('/application'));
-
-        ApplicationBootstrapper::setUpConfigurations();
+    public function migrationsLoader($directory) {
+        $this->loadMigrationsFrom($directory . '/Migrations');
     }
 
 }

@@ -6,11 +6,12 @@ namespace Application\Modules\Core\Users;
 
 use Application\Modules\Core\Logs\Logs_Actions;
 use Application\Modules\Core\Permissions\Permissions_Model;
-use Application\Modules\Core\UserPermissions\UserPermissions_Actions;
-use Application\Modules\Core\UserPermissions\UserPermissions_Model;
-use Application\Modules\Core\UserRoles\UserRoles_Actions;
-use Application\Modules\Core\UserRoles\UserRoles_Model;
-use Application\Modules\Core\UserTypes\UserTypes_Model;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Actions;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
+use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Actions;
+use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
+use Application\Modules\Core\Users\_Modules\UserStatus\UserStatus;
+use Application\Modules\Core\Users\_Modules\UserTypes\UserTypes_Model;
 use Application\Modules\ProfileManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +22,6 @@ use Monolog\Handler\IFTTTHandler;
 
 class Users_Actions
 {
-    const USER_ACTIVE_STATUS = 1;
-    const USER_INACTIVE_STATUS = 2;
-    const USER_PENDING_STATUS = 3;
-
-
     private static $ACTOR = 'Users';
 
     public static function index() {
@@ -34,7 +30,7 @@ class Users_Actions
         try {
             $all_data = Users_Model
                 ::join('user_types', 'user_types.id', 'users.user_type_id')
-                ->leftJoin('users as creator', 'creator.id', 'users.user_id')
+                ->leftJoin('users as creator', 'creator.id', 'users.created_by')
                 ->join('user_status','user_status.id', 'users.user_status_id')
                 ->orderBy('users.id')
                 ->get([
@@ -123,7 +119,6 @@ class Users_Actions
         try {
             $validation = validateData($request_data, [
                 'user_id' => ['required'],
-//                'old_password' => ['required'],
                 'password' => ['required'],
                 'password_confirmation' => ['required','same:password'],
             ]);
@@ -218,7 +213,7 @@ class Users_Actions
                 return sendError('User not found.', 404);
             }
 
-            if (Auth::id() != 1 && $user->id == 1) {
+            if (Auth::id() != Users::ADMINISTRATOR_ACCOUNT_ID && $user->id == Users::ADMINISTRATOR_ACCOUNT_ID) {
                 return sendError('You are not allowed.', 403);
             }
 
@@ -336,8 +331,7 @@ class Users_Actions
                 return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
 
             $data = $validation['data'];
-            $data['user_status_id'] = 2; //PENDING USER
-            $data['user_id'] = -1;
+            $data['user_status_id'] = UserStatus::PENDING; //PENDING USER
             $data['password'] = bcrypt($data['password']);
 
             $record = Users_Model::create($data);
@@ -401,25 +395,6 @@ class Users_Actions
         }
     }
 
-
-    public static function changeUserStatus($request_data, $urid) {
-        if (denied('change_user_status')) return sendError('Forbidden', 403);
-
-        DB::beginTransaction();
-
-        $result = self::processChangeUserStatus($request_data, $urid);
-        if ($result['status'] == false ) {
-            if ($result['message'] == 'validation_error') {
-                return sendValidationError($result['error']);
-            } else {
-                return sendError($result['error'], 500);
-            }
-        }
-
-        DB::commit();
-        return sendResponse('User status updated successfully', $result['data']);
-    }
-
     public static function processChangeUserStatus($request_data, $urid) {
         try{
             $record = Users_Model::whereUrid($urid)->first();
@@ -450,5 +425,111 @@ class Users_Actions
         } catch (\Exception $exception) {
             return ['status' => false, 'error' => $exception->getMessage()];
         }
+    }
+
+    public static function updateUserProfile($request_data){
+
+        $record = Users_Model::whereId(Auth::id())->first();
+        if (!$record) return sendError('Record Not Found', 404);
+
+        $old_data = $record->toArray();
+
+        $result = ProfileManager::update($record, $request_data);
+
+        if ($result['status']) {
+            logInfo(__FUNCTION__,[
+                'actor' => self::$ACTOR,
+                'actor_id' => $record->urid,
+                'action_description' => 'User Profile Updated',
+                'old_data' => json_encode($old_data),
+                'new_data' => json_encode($request_data),
+            ],'USER-PROFILE-UPDATED');
+
+            return sendResponse('Success');
+        }
+
+        return sendError('Failed to get user profile.', 500);
+    }
+
+    public static function update($request_data, $urid){
+        if (denied('update_user')) return sendError('Forbidden', 500);
+
+        $record = Users_Model::whereUrid($urid)->first();
+        if (!$record) return sendError('Record Not Found', 404);
+
+        $old_data = $record->toArray();
+
+        $validation = validateData($request_data, [
+            'name' => ['required', 'string', Rule::unique('users')->ignore($record->id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($record->id)],
+            'user_type_id' => 'required|integer'
+        ]);
+
+        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
+
+        $data = $validation['data'];
+
+        //Update User name, email and user_type
+        $user_update = $record->update($data);
+        if (!$user_update) return sendError('Failed to Update User', 500);
+
+        logInfo(__FUNCTION__,[
+            'actor' => self::$ACTOR,
+            'actor_id' => $record->urid,
+            'action_description' => 'User Updated',
+            'old_data' => json_encode($old_data),
+            'new_data' => json_encode($request_data),
+        ],'USER-UPDATED');
+
+        return sendResponse('User update Successful.', 500);
+    }
+
+    public static function completeUserRegistration($request_data, $urid){
+        if (denied('complete_user_registration')) return sendError('Forbidden', 500);
+
+        $record = Users_Model::whereUrid($urid)->first();
+        if (!$record) return sendError('User not found', 404);
+
+        if ($record->user_status_id != UserStatus::PENDING) {
+            return sendError('User is not pending', 409);
+        }
+
+        $old_data = $record->toArray();
+
+        $validation = validateData($request_data, [
+            'role_id' => 'required|integer',
+            'user_type_id' => 'required|integer'
+        ]);
+
+        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
+
+        $data = $validation['data'];
+        $data['user_status_id'] = UserStatus::ACTIVE;
+
+        DB::beginTransaction();
+
+        //Update Username, email and user_type
+        $user_update = $record->update($data);
+        if (!$user_update) return sendError('Failed to Update User', 500);
+
+        //Update user role
+        $user_role_update = UserRoles_Actions::batchUpdateOrSaveRoles($record, [
+           [ 'id' => $data['role_id'], 'selected' => true,]
+        ]);
+
+        if (!$user_role_update['status'])
+            return sendError($user_role_update['message'], 500);
+
+        logInfo(__FUNCTION__,[
+            'actor' => self::$ACTOR,
+            'actor_id' => $record->urid,
+            'action_description' => 'User Registration Completed',
+            'old_data' => json_encode($old_data),
+            'new_data' => json_encode($request_data),
+        ],'USER-REGISTRATION-COMPLETED');
+
+        DB::commit();
+
+        return sendResponse('User Registration Complete.');
     }
 }

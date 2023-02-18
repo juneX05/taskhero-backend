@@ -4,8 +4,8 @@
 namespace Application\Modules\Core\Roles;
 
 
-use Application\Modules\Core\RolePermissions\RolePermissions_Actions;
-use Application\Modules\Core\RolePermissions\RolePermissions_Model;
+use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Actions;
+use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
 use Application\Modules\Core\Status\Status_Model;
 use Exception;
 use Illuminate\Database\Eloquent\Model;

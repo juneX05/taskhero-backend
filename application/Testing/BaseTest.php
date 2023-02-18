@@ -22,9 +22,13 @@ class BaseTest extends TestCase
 
     public $login_token = null;
 
-    public function login()
+    public function login($login_data = null)
     {
-        $response = $this->post('/api/login', json_decode($this->login_data, true));
+        if ($login_data) $data = $login_data;
+        else $data = json_decode($this->login_data, true);
+
+        $response = $this->post('/api/login', $data);
+
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);
 

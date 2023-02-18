@@ -101,7 +101,6 @@ class T005_RolesTest extends BaseTest
             ['id'=>7, 'selected'=>true],
         ];
         $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/change-permissions", 'POST', $data);
-        echo $response->getContent();
         $response_data = json_decode($response->getContent(), true);
 
         $response->assertStatus(200);

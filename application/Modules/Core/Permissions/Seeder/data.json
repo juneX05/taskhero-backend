@@ -4,7 +4,7 @@
             "name": "view_logs",
             "title": "View Logs",
             "description": "View System Logs",
-            "module_id": "6",
+            "module_id": "logs",
             "updated_at": "2022-12-27 11:29:57",
             "urid": "482bdf639b3267c362895e4ced97faa3954d5543"
         },
@@ -12,7 +12,7 @@
             "name": "manage_menus",
             "title": "Manage Menus",
             "description": "Permission to manage system menus",
-            "module_id": "4",
+            "module_id": "menus",
             "updated_at": "2022-12-27 11:30:06",
             "urid": "91ac3fe097d624127ce11eaba18aa07c3d0e9c26"
         },
@@ -20,7 +20,7 @@
             "name": "view_modules",
             "title": "View Modules",
             "description": "Permission to view system modules",
-            "module_id": "5",
+            "module_id": "modules",
             "updated_at": "2022-12-27 11:30:15",
             "urid": "5c457a0432d7f22ea1bf5d3e8cd8d18a31a904c6"
         },
@@ -28,7 +28,7 @@
             "name": "save_module",
             "title": "Save Module",
             "description": "Permission to create system module",
-            "module_id": "5",
+            "module_id": "modules",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "a742faf15fdef06baa9e5c97a42f7c26e611bb59"
         },
@@ -36,7 +36,7 @@
             "name": "view_module",
             "title": "View Module",
             "description": "Permission to view system module details",
-            "module_id": "5",
+            "module_id": "modules",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "d67fc990c174fad35882c7567067947f5716a192"
         },
@@ -44,7 +44,7 @@
             "name": "update_module",
             "title": "Update Module",
             "description": "Permission to update system module",
-            "module_id": "5",
+            "module_id": "modules",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "21eecedc18ef91e30b3447c2264ae5ae28bd7b19"
         },
@@ -52,7 +52,7 @@
             "name": "change_module_status",
             "title": "Change Module Status",
             "description": "Permission to change status of a system module",
-            "module_id": "5",
+            "module_id": "modules",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "941d5a5ac599fcbb48cc12cca540415bb199a8e9"
         },
@@ -60,7 +60,7 @@
             "name": "view_permissions",
             "title": "View Permissions",
             "description": "Permission to view System Permissions",
-            "module_id": "7",
+            "module_id": "permissions",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "6141090ea7d7b32ec980dbdd059aaba24d8695ba"
         },
@@ -68,7 +68,7 @@
             "name": "save_permission",
             "title": "Save Permission",
             "description": "Permission to view add system Permissions",
-            "module_id": "7",
+            "module_id": "permissions",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "2628a3e29da80f77043ac993b9633f13aacdb028"
         },
@@ -76,7 +76,7 @@
             "name": "update_permission",
             "title": "Update Permission",
             "description": "Permission to view update system Permissions",
-            "module_id": "7",
+            "module_id": "permissions",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "7c2fe5d0a64e84da22e232c36be21c873bca4068"
         },
@@ -84,7 +84,7 @@
             "name": "view_roles",
             "title": "View Roles",
             "description": "Permission to view system roles",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "6edff030aa2a4e68951122259cb87e162506f6d3"
         },
@@ -92,7 +92,7 @@
             "name": "view_role",
             "title": "View Role",
             "description": "Permission to view system role details",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "0e9ebaaed47a4817837a09021ee90f564a3bc4d9"
         },
@@ -100,7 +100,7 @@
             "name": "update_role",
             "title": "Update Role",
             "description": "Permission to update system role details",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "d9e8fe42cf4590ba1224e7906714281656ff98dd"
         },
@@ -108,7 +108,7 @@
             "name": "save_role",
             "title": "Save Role",
             "description": "Permission to save system role",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "44e0201e4c9a6938a1eea402c4fabf4be2503561"
         },
@@ -116,7 +116,7 @@
             "name": "change_role_permissions",
             "title": "Change Role Permissions",
             "description": "Permission to change system role permissions",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "54467e1ac009db73bc145bed841a20aa802cd07c"
         },
@@ -124,7 +124,7 @@
             "name": "change_role_status",
             "title": "Change Role Status",
             "description": "Permission to change system role status",
-            "module_id": "3",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "42135c4786d604ba5e2f448fad335df3f1c55fde"
         },
@@ -132,7 +132,7 @@
             "name": "view_users",
             "title": "View Users",
             "description": "View Users of the System",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "7453007fea4bcb56e51cd7c2e46855b39d8168d5"
         },
@@ -140,7 +140,7 @@
             "name": "view_user",
             "title": "View User",
             "description": "View User details of the System",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "e8074fd75d02958039c2ddcfc6ba5bb5b29d1bc8"
         },
@@ -148,7 +148,7 @@
             "name": "save_user",
             "title": "Save User",
             "description": "Create a user in the system.",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "b75226ba5fe6c1108cf86401246a23d385a96533"
         },
@@ -156,7 +156,7 @@
             "name": "change_user_status",
             "title": "Change User Status",
             "description": "Permission to change user status. From either active or in-active",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "e476459605af9c1be937c35b27030b3d077977eb"
         },
@@ -164,7 +164,7 @@
             "name": "change_password",
             "title": "Change Password",
             "description": "Permission to change password",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-13 02:54:51",
             "urid": "e0fb96603e788494c3c037d87378a94954e4e01c"
         },
@@ -172,7 +172,7 @@
             "name": "change_user_permissions",
             "title": "Change User Permissions",
             "description": "Permission to change user permissions",
-            "module_id": "2",
+            "module_id": "users",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "69d612de4a133b99a71124f13b1f7d17bd5e4459"
         },
@@ -180,7 +180,7 @@
             "name": "change_user_roles",
             "title": "Change User Roles",
             "description": "Permission to change user roles",
-            "module_id": "2",
+            "module_id": "roles",
             "updated_at": "2023-01-08 17:54:11",
             "urid": "329fa70be1baee153e20121649e9c570a03920fd"
         },
@@ -188,7 +188,7 @@
             "name": "view_developers_dashboard",
             "title": "View Developers Dashboard",
             "description": "Permission to view developers dashboard",
-            "module_id": "1",
+            "module_id": "dashboard",
             "updated_at": "2023-01-10 12:22:29",
             "urid": "c96507580b4d7b63f43ffba4007e1a83cff1e47f"
         },
@@ -196,7 +196,7 @@
             "name": "view_super_admins_dashboard",
             "title": "View Super Admins Dashboard",
             "description": "Permission to view super admins dashboard",
-            "module_id": "1",
+            "module_id": "dashboard",
             "updated_at": "2023-01-10 12:22:37",
             "urid": "0085c790774870003b738ec19dddf7e29a2b71ce"
         },
@@ -204,7 +204,7 @@
             "name": "view_admins_dashboard",
             "title": "View Admins Dashboard",
             "description": "Permission to view admins dashboard",
-            "module_id": "1",
+            "module_id": "dashboard",
             "updated_at": "2023-01-10 12:22:45",
             "urid": "dcfcd19dae0d5701a727ae7f0817f4172ed93cf3"
         },
@@ -212,9 +212,16 @@
             "name": "change_user_password",
             "title": "Change User Password",
             "description": "Permission to change user password",
-            "module_id": "7",
+            "module_id": "users",
             "updated_at": "2023-01-13 02:54:26",
             "urid": "709374ad3b85d8753a8eed517af28cb8bf8d4141"
+        },
+        {
+            "name": "complete_user_registration",
+            "title": "Complete user registration",
+            "description": "Permission to complete the user registration process",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
         }
     ]
 }

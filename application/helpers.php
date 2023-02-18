@@ -4,9 +4,9 @@ use Application\ApplicationBootstrapper;
 use Application\Modules\Core\Logs\Logs_Actions;
 use Application\Modules\Core\Permissions\Permissions_Actions;
 use Application\Modules\Core\Permissions\Permissions_Model;
-use Application\Modules\Core\RolePermissions\RolePermissions_Model;
-use Application\Modules\Core\UserPermissions\UserPermissions_Model;
-use Application\Modules\Core\UserRoles\UserRoles_Model;
+use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
+use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -142,21 +142,6 @@ function getSeederData($module) {
     }
 
     return $seeder_data;
-}
-
-function getModules() {
-    $directories = ApplicationBootstrapper::getApplicationModules();
-    $modules = [];
-
-    foreach ($directories as $index => $modules_path) {
-
-        foreach($modules_path as $module_path) {
-            if ($index == 'core_modules') $replace_key = core_modules_path() . DIRECTORY_SEPARATOR;
-            else $replace_key = system_modules_path() . DIRECTORY_SEPARATOR;
-            $modules[$index][] = str_replace($replace_key, '',$module_path);
-        }
-    }
-    return $modules;
 }
 
 function getUserPermissions($user_id) {

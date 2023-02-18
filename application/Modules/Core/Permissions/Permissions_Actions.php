@@ -3,8 +3,8 @@
 
 namespace Application\Modules\Core\Permissions;
 
-use Application\Modules\Core\RolePermissions\RolePermissions_Actions;
-use Application\Modules\Core\UserPermissions\UserPermissions_Actions;
+use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Actions;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Actions;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
@@ -32,7 +32,7 @@ class Permissions_Actions
             'name' => ['required', 'string'],
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
-            'module_id' => ['required', 'integer'],
+            'module_id' => ['required', 'string'],
         ];
 
         if ($record == null) {

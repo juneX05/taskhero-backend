@@ -6,9 +6,9 @@ namespace Application\Modules\Core\Auth;
 
 use Application\Modules\Core\Menus\Menus_Actions;
 use Application\Modules\Core\Menus\Menus_Model;
-use Application\Modules\Core\RolePermissions\RolePermissions_Model;
-use Application\Modules\Core\UserPermissions\UserPermissions_Model;
-use Application\Modules\Core\UserRoles\UserRoles_Model;
+use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
+use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
 use Application\Modules\Core\Users\Users_Model;
 use Illuminate\Http\Request;
 use Application\Modules\BaseController;

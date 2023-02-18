@@ -19,7 +19,7 @@ class CreatePermissionsTable extends Migration
             $table->string('name')->unique();
             $table->string('title')->unique();
             $table->longText('description');
-            $table->integer('module_id');
+            $table->string('module_id');
             $table->timestamps();
             $table->string('urid')->unique();
         });

@@ -6,6 +6,7 @@ namespace Application\Modules\Core\Auth;
 
 use Application\Modules\BaseModel;
 use Application\Modules\Core\Menus\Menus_Actions;
+use Application\Modules\Core\Users\_Modules\UserStatus\UserStatus;
 use Application\Modules\Core\Users\Users_Actions;
 use Application\Modules\Core\Users\Users_Model;
 use Carbon\Carbon;
@@ -242,8 +243,9 @@ class Auth_Actions
         if (!$validation['status']) return sendValidationError($validation['error']);
 
         $data = $validation['data'];
+        $data['password'] = bcrypt($data['password']);
 
-        $data['user_status_id'] = Users_Actions::USER_PENDING_STATUS;
+        $data['user_status_id'] = UserStatus::PENDING;
         $user = Users_Model::create($data);
 
         if (!$user) return sendError('Registration Failed', 500);

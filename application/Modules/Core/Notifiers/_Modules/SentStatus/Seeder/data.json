@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "sent",
+            "title": "Sent",
+            "color": "green"
+        },
+        {
+            "id": 2,
+            "name": "pending",
+            "title": "Pending",
+            "color": "orange"
+        },
+        {
+            "id": 3,
+            "name": "failed",
+            "title": "Failed",
+            "color": "red"
+        }
+    ]
+}

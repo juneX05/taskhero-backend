@@ -29,11 +29,11 @@ class Users_Controller extends BaseController {
         return Users_Actions::changePassword($request->all());
     }
 
-    public function changeUserPermissions(Request $request) {
+    public function changePermissions(Request $request) {
         return Users_Actions::changeUserPermissions($request->all());
     }
 
-    public function changeUserRoles(Request $request) {
+    public function changeRoles(Request $request) {
         return Users_Actions::changeUserRoles($request->all());
     }
 
@@ -43,6 +43,18 @@ class Users_Controller extends BaseController {
 
     public function profile() {
         return Users_Actions::getUserProfile();
+    }
+
+    public function profileUpdate(Request $request) {
+        return Users_Actions::updateUserProfile($request->all());
+    }
+
+    public function update(Request $request, $urid) {
+        return Users_Actions::update($request->all(), $urid);
+    }
+
+    public function completeRegistration(Request $request, $urid) {
+        return Users_Actions::completeUserRegistration($request->all(), $urid);
     }
 
 }
