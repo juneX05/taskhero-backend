@@ -53,17 +53,17 @@ class SystemSeeder extends Seeder
 
             if (is_dir($module_directory . "/_Modules")) {
                 $module_parent = [
-                    'directory' => $module_directory . "/_Modules",
+                    'directory' => $module_directory . "/_Modules" . DIRECTORY_SEPARATOR,
                     'namespace' => str_replace('\\\\','\\',$parent['namespace'] . "\\{$module}\_Modules")
                 ];
-
+        
                 $directories = File::directories($module_directory. "/_Modules");
 
-                $seeders = array_merge_recursive($seeders, $this->loadSeeders($module_parent, $directories));
+                $seeders = array_merge_recursive($seeders ?? [], $this->loadSeeders($module_parent, $directories));
             }
         }
 
-        return $seeders;
+        return $seeders ?? [];
 
     }
 
