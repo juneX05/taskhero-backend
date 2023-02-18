@@ -14,7 +14,7 @@ class NotifierTypes_Seeder extends Seeder
      */
     public function run()
     {
-        $seeder_data = getSeederData('SentStatus');
+        $seeder_data = getSeederData('NotifierTypes');
 
         $this->seedData($seeder_data['data']);
     }
