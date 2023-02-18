@@ -1,6 +1,7 @@
 <?php
 namespace Application\Testing\Acceptance;
 
+use Application\Modules\Core\Roles\Roles_Model;
 use Application\Testing\BaseTest;
 
 class T005_RolesTest extends BaseTest
@@ -64,12 +65,8 @@ class T005_RolesTest extends BaseTest
 
     public function test_updating_role()
     {
-        $response_data = $this->viewData();
-
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $new_data = $response_data[random_int(0, $count-1)];
+        $new_data = Roles_Model::whereName('new_role')
+            ->first()->toArray();
 
         $data = json_decode($this->data, true);
         $data['name'] = 'new_updated_role';
@@ -87,12 +84,8 @@ class T005_RolesTest extends BaseTest
 
     public function test_change_role_permissions()
     {
-        $response_data = $this->viewData();
-
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $record_data = $response_data[random_int(0, $count-1)];
+        $record_data = Roles_Model::whereName('super_admin')
+            ->first()->toArray();
 
         $data['permissions'] = [
             ['id'=>1, 'selected'=>true],
@@ -111,12 +104,8 @@ class T005_RolesTest extends BaseTest
 
     public function test_change_role_status()
     {
-        $response_data = $this->viewData();
-
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $record_data = $response_data[random_int(0, $count-1)];
+        $record_data = Roles_Model::whereName('super_admin')
+            ->first()->toArray();
 
         $data['status_id'] = 1;
         $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/change-status", 'POST', $data);

@@ -1,6 +1,7 @@
 <?php
 namespace Application\Testing\Acceptance;
 
+use Application\Modules\Core\Permissions\Permissions_Model;
 use Application\Testing\BaseTest;
 
 class T004_PermissionsTest extends BaseTest
@@ -10,7 +11,7 @@ class T004_PermissionsTest extends BaseTest
             "name": "new_permission",
             "title": "New Permission",
             "description": "This is the new permission",
-            "module_id": "7"
+            "module_id": "permissions"
     }
     JSON;
 
@@ -43,12 +44,8 @@ class T004_PermissionsTest extends BaseTest
 
     public function test_updating_permission()
     {
-        $response_data = $this->viewData();
-
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $new_data = $response_data[random_int(0, $count-1)];
+        $new_data = Permissions_Model::whereName('new_permission')
+            ->first()->toArray();
 
         $data = json_decode($this->data, true);
         $data['name'] = 'new_updated_permission';

@@ -8,16 +8,6 @@ use function PHPUnit\Framework\assertEquals;
 
 class T006_UsersTest extends BaseTest
 {
-    private $data = <<<JSON
-    {
-            "name": "new_role",
-            "title": "New Role",
-            "description": "This is the new role",
-            "color": "red",
-            "user_id": "1",
-            "status_id": "1"
-    }
-    JSON;
 
     public function test_view_user_profile()
     {
@@ -101,15 +91,10 @@ class T006_UsersTest extends BaseTest
 
     public function test_change_user_password()
     {
-        $view_data = $this->viewData();
-
-        $count = count($view_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $new_data = $view_data[1];
+        $user = Users_Model::whereEmail('user@gmail.com')->first();
 
         $data = [
-            'user_id' => $new_data['urid'],
+            'user_id' => $user->urid,
             'password' => 'password',
             'password_confirmation' => 'password',
         ];
@@ -149,20 +134,13 @@ class T006_UsersTest extends BaseTest
 
         assertArrayHasKey('status', $response_data);
         assertEquals($response_data['status'], true, 'Status is not True');
-
-        $this->login_token = null;
     }
 
     public function test_change_user_permissions()
     {
-        $response_data = $this->viewData();
+        $user = Users_Model::whereEmail('user@gmail.com')->first();
 
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $record_data = $response_data[random_int(0, $count-1)];
-
-        $data['user_id'] = $record_data['urid'];
+        $data['user_id'] = $user->urid;
         $data['permissions'] = [
             ['id'=>1, 'selected'=>true],
             ['id'=>2, 'selected'=>false],
@@ -181,14 +159,9 @@ class T006_UsersTest extends BaseTest
 
     public function test_change_user_roles()
     {
-        $response_data = $this->viewData();
+        $user = Users_Model::whereEmail('user@gmail.com')->first();
 
-        $count = count($response_data);
-        assert($count > 0, 'Weird, No Test Data');
-
-        $record_data = $response_data[random_int(0, $count-1)];
-
-        $data['user_id'] = $record_data['urid'];
+        $data['user_id'] = $user->urid;
         $data['roles'] = [
             ['id'=>1, 'selected'=>true],
             ['id'=>2, 'selected'=>false],
