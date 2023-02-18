@@ -77,7 +77,7 @@ function sendError($error, $code)
     }
 
     $request_id = Logs_Actions::$REQUEST_ID;
-    $response['message'] .= " | REQUEST-ID(${request_id})";
+    $response['message'] .= " | REQUEST-ID({$request_id})";
 
     logInfo('RESPONSE', $response);
 
@@ -92,7 +92,7 @@ function sendValidationError($errors) {
     ];
 
     $request_id = Logs_Actions::$REQUEST_ID;
-    $response['message'] .= " | REQUEST-ID(${request_id})";
+    $response['message'] .= " | REQUEST-ID({$request_id})";
 
     logInfo('RESPONSE', $response);
 
