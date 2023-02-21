@@ -18,5 +18,7 @@ Route::middleware('auth:sanctum')
         Route::post('/users/change-roles', [Users_Controller::class, 'changeRoles']);
         Route::post('/users/{urid}/complete-user-registration', [Users_Controller::class, 'completeRegistration']);
         Route::post('/users/save', [Users_Controller::class, 'save']);
+        Route::post('/users/{urid}/activate', [Users_Controller::class, 'activate']);
+        Route::post('/users/{urid}/deactivate', [Users_Controller::class, 'deactivate']);
 
     });

@@ -532,4 +532,80 @@ class Users_Actions
 
         return sendResponse('User Registration Complete.');
     }
+
+    public static function deactivateUser($request_data, $urid){
+        if (denied('deactivate_user')) return sendError('Forbidden', 500);
+
+        $record = Users_Model::whereUrid($urid)->first();
+        if (!$record) return sendError('User not found', 404);
+
+        if ($record->user_status_id != UserStatus::ACTIVE) {
+            return sendError('User is not Active', 409);
+        }
+
+        $old_data = $record->toArray();
+
+        $validation = validateData($request_data, [
+            'reason' => ['required','string'],
+        ]);
+
+        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
+
+        $data = $validation['data'];
+
+        $data['user_status_id'] = UserStatus::INACTIVE;
+        $data['notes'] = $data['reason'];
+
+        $user_update = $record->update($data);
+        if (!$user_update) return sendError('Failed to Deactivate User', 500);
+
+        logInfo(__FUNCTION__,[
+            'actor' => self::$ACTOR,
+            'actor_id' => $record->urid,
+            'action_description' => 'User Deactivated',
+            'old_data' => json_encode($old_data),
+            'new_data' => json_encode([]),
+        ],'USER-DEACTIVATED');
+
+        return sendResponse('User Deactivated.');
+    }
+
+    public static function activateUser($request_data, $urid){
+        if (denied('activate_user')) return sendError('Forbidden', 500);
+
+        $record = Users_Model::whereUrid($urid)->first();
+        if (!$record) return sendError('User not found', 404);
+
+        if ($record->user_status_id != UserStatus::INACTIVE) {
+            return sendError('User is not inactive', 409);
+        }
+
+        $old_data = $record->toArray();
+
+        $validation = validateData($request_data, [
+            'reason' => ['required','string'],
+        ]);
+
+        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
+
+        $data = $validation['data'];
+
+        $data['user_status_id'] = UserStatus::ACTIVE;
+        $data['notes'] = $data['reason'];
+
+        $user_update = $record->update($data);
+        if (!$user_update) return sendError('Failed to Activate User', 500);
+
+        logInfo(__FUNCTION__,[
+            'actor' => self::$ACTOR,
+            'actor_id' => $record->urid,
+            'action_description' => 'User Activated',
+            'old_data' => json_encode($old_data),
+            'new_data' => json_encode([]),
+        ],'USER-ACTIVATED');
+
+        return sendResponse('User Activated.');
+    }
+
+
 }

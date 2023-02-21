@@ -18,6 +18,7 @@ class AddUsersTableColumns extends Migration
             $table->integer('user_status_id')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('user_type_id')->nullable();
+            $table->longText('notes')->nullable();
             $table->string('urid')->unique()->nullable();
         });
 

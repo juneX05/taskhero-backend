@@ -15,7 +15,7 @@ class Menus_Actions
     private static $ACTOR = 'Menus';
 
     public static function index() {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+//        if (denied('manage_menus')) return sendError('Forbidden', 403);
 
         try {
             $data = \DB::table('menus', 'm')

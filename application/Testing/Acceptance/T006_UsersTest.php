@@ -221,6 +221,63 @@ class T006_UsersTest extends BaseTest
         $response->assertJsonPath('status', true);
     }
 
+    public function test_deactivate_user()
+    {
 
+        $user = Users_Model::whereEmail('demouser4@gmail.com')->first();
+        $urid = $user->urid;
+        $data = [
+            'reason' => 'This is user is such an a big dummy',
+        ];
+
+        $response = $this->sendAuthorizedRequest("/api/users/{$urid}/deactivate", 'POST',$data);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+
+        $response = $this->post("/api/logout");
+        $response->assertStatus(200);
+
+        //Test Login after deactivation.
+        $data = [
+            'email' => 'demouser4@gmail.com',
+            'password' => 'secretss',
+        ];
+        $response = $this->post("/api/login", $data);
+
+        $response->assertStatus(401);
+        $response->assertJsonPath('status', false);
+    }
+
+    public function test_activate_user()
+    {
+
+        $user = Users_Model::whereEmail('demouser4@gmail.com')->first();
+        $urid = $user->urid;
+        $data = [
+            'reason' => 'approved',
+        ];
+
+        $response = $this->sendAuthorizedRequest("/api/users/{$urid}/activate", 'POST',$data);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+
+        $response = $this->post("/api/logout");
+        $response->assertStatus(200);
+
+        //Test Login after deactivation.
+        $data = [
+            'email' => 'demouser4@gmail.com',
+            'password' => 'secretss',
+        ];
+        $response = $this->post("/api/login", $data);
+
+        echo bcrypt($data['password']) . "\n\n";
+        echo $response->getContent() . "\n";
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+    }
 
 }

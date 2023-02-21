@@ -57,4 +57,12 @@ class Users_Controller extends BaseController {
         return Users_Actions::completeUserRegistration($request->all(), $urid);
     }
 
+    public function deactivate(Request $request, $urid) {
+        return Users_Actions::deactivateUser($request->all(), $urid);
+    }
+
+    public function activate(Request $request, $urid) {
+        return Users_Actions::activateUser($request->all(), $urid);
+    }
+
 }

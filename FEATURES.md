@@ -40,9 +40,8 @@ TASK HERO: BACKEND (LARAVEL EDITION)
     - [x] User Update
     - [x] View User Details
     - [x] Complete User Registration
-    - [ ] Deactivate User
-    - [ ] Activate User
-    - [ ] Delete User
+    - [x] Deactivate User
+    - [x] Activate User
     - [x] Change User Permissions
     - [x] Change User Roles
     - [x] Change User Password

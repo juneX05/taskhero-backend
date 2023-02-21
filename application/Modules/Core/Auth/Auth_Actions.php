@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -58,31 +59,33 @@ class Auth_Actions
 
         $data = $validation['data'];
 
-        $auth = Auth::attempt([
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
+        $user = Users_Model::where('email', $data['email'])->first();
 
-        if ($auth) {
-            $user = Auth::user();
+        if (!$user) {
+            return sendError('Email or Password is incorrect.',401);
+        }
 
-            if ($user->user_status_id == 1) {
-                logInfo(__FUNCTION__,[
-                    'actor_id' => $user->urid,
-                    'actor' => self::$ACTOR,
-                    'action_description' => 'User Logged In',
-                    'old_data' => null,
-                    'new_data' => json_encode($user),
-                ],'USER-LOGIN');
+        $password_check = Hash::check($data['password'], $user->password);
+        if (!$password_check) {
+            return sendError('Login Failed',401);
+        }
 
-                $token = $user->createToken('AuthToken')->plainTextToken;
-                $user['token'] = $token;
-                return sendResponse('Login Successful', $user);
-            }
-
+        if ($user->user_status_id != 1) {
             return sendError('Your Account is not active, Please contact administrator if the problem persists.',401);
         }
-        return sendError('Login Failed',401);
+
+        logInfo(__FUNCTION__,[
+            'actor_id' => $user->urid,
+            'actor' => self::$ACTOR,
+            'action_description' => 'User Logged In',
+            'old_data' => null,
+            'new_data' => json_encode($user),
+        ],'USER-LOGIN');
+
+        $token = $user->createToken('AuthToken')->plainTextToken;
+        $user['token'] = $token;
+
+        return sendResponse('Login Successful', $user);
     }
 
     public static function logout() {

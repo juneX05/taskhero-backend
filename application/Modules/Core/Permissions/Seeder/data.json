@@ -222,6 +222,20 @@
             "description": "Permission to complete the user registration process",
             "module_id": "users",
             "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "activate_user",
+            "title": "Activate user",
+            "description": "Permission to activate the user",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "deactivate_user",
+            "title": "Deactivate user",
+            "description": "Permission to deactivate user",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
         }
     ]
 }
