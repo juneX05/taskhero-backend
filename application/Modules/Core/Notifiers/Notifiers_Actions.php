@@ -21,8 +21,8 @@ class Notifiers_Actions
         if (denied('view_notifiers')) return sendError('Forbidden', 403);
         try {
             $all_data = Notifiers_Model
-                ::join('status', 'status.id','modules.status_id')
-                ->select(['notifiers.*', 'status.name as status', 'status.color as status_color'])
+                ::join('status', 'status.id',self::$TABLE . '.status_id')
+                ->select([self::$TABLE . '.*', 'status.name as status', 'status.color as status_color'])
                 ->get();
 
             return sendResponse('Success', $all_data);
@@ -35,7 +35,7 @@ class Notifiers_Actions
         if (denied('view_notifier')) return sendError('Forbidden', 403);
         try {
             $record = Notifiers_Model
-                ::join('status', 'status.id','modules.status_id')
+                ::join('status', 'status.id',self::$TABLE . '.status_id')
                 ->select([self::$TABLE . '.*', 'status.name as status', 'status.color as status_color'])
                 ->where(self::$TABLE .'.urid', $urid)
                 ->first();
@@ -62,9 +62,7 @@ class Notifiers_Actions
         $rules = [
             'name' => ['required', 'string'],
             'title' => ['required', 'string'],
-            'description' => ['required', 'string'],
             'message' => ['required', 'string'],
-            'type' => ['required', 'integer'],
             'status_id' => ['required', 'integer'],
         ];
 
@@ -151,46 +149,65 @@ class Notifiers_Actions
         }
     }
 
-    public static function changeNotifierStatus($request_data, $urid) {
-        if (denied('change_module_status')) return sendError('Forbidden', 403);
-
+    public static function deactivateNotifier($urid) {
+        if (denied('deactivate_notifier')) return sendError('Forbidden', 403);
         try {
-            $model = Notifiers_Model::whereUrid($urid)->first();
-            if (!$model) {
+            $record = Notifiers_Model::whereUrid($urid)->first();
+            if (!$record) {
                 return sendError('Record not found', 404);
             }
 
-            $validation = validateData($request_data, [
-                'status_id' => ['required','integer']
-            ]);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            $data['status_id'] = Status::INACTIVE;
 
-            $model = Notifiers_Model::whereUrid($urid)->first();
-            if (!$model) {
-                return sendError('Record not found', 404);
-            }
+            $old_data = $record->toArray();
 
-            $data = $validation['data'];
-
-            $old_data = $model->toArray();
-
-            $item = $model->update([
-                'status_id' => $data['status_id']
-            ]);
+            $item = $record->update($data);
 
             if (!$item) {
-                return sendError('Failed to change module status', 500);
+                return sendError('Failed to deactivate notifier', 500);
             }
 
             logInfo(__FUNCTION__,[
-                'actor_id' => $model->urid,
+                'actor_id' => $record->urid,
                 'actor' => self::$ACTOR,
-                'action_description' => 'Change Notifier Status',
+                'action_description' => 'Deactivate Notifier',
                 'old_data' => json_encode($old_data),
-                'new_data' => json_encode($model),
-            ],'CHANGE-MODULE_STATUS');
+                'new_data' => json_encode($record),
+            ],'DEACTIVATE-NOTIFIER');
 
-            return sendResponse('Success', $model);
+            return sendResponse('Success', $record);
+        } catch (Exception $exception) {
+            return sendError($exception->getMessage(), 500);
+        }
+    }
+
+    public static function activateNotifier($urid) {
+        if (denied('activate_notifier')) return sendError('Forbidden', 403);
+        try {
+            $record = Notifiers_Model::whereUrid($urid)->first();
+            if (!$record) {
+                return sendError('Record not found', 404);
+            }
+
+            $data['status_id'] = Status::ACTIVE;
+
+            $old_data = $record->toArray();
+
+            $item = $record->update($data);
+
+            if (!$item) {
+                return sendError('Failed to activate notifier', 500);
+            }
+
+            logInfo(__FUNCTION__,[
+                'actor_id' => $record->urid,
+                'actor' => self::$ACTOR,
+                'action_description' => 'Activate Notifier',
+                'old_data' => json_encode($old_data),
+                'new_data' => json_encode($record),
+            ],'ACTIVATE-NOTIFIER');
+
+            return sendResponse('Success', $record);
         } catch (Exception $exception) {
             return sendError($exception->getMessage(), 500);
         }

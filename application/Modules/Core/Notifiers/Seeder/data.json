@@ -1,3 +1,22 @@
 {
-   "data": []
+   "data": [
+       {
+           "name": "registration_successful_email",
+           "title": "Registration Successful",
+           "message": "You have registered successfully in our platform.<br/>Your account will be activated after verification is complete.<br/>Please contact the administrator if this takes longer than 48hours.",
+           "status_id": 1
+       },
+       {
+           "name": "reset_password_email",
+           "title": "Reset Password",
+           "message": "You have requested to reset your email.<br/>Please use the [reset_password_link] to create reset it.",
+           "status_id": 1
+       },
+       {
+           "name": "reset_password_successful_email",
+           "title": "Reset Password Successful",
+           "message": "You have successfully reset your password.<br/>Please use the new password to login back to your account.",
+           "status_id": 1
+       }
+   ]
 }

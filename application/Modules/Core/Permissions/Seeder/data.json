@@ -236,6 +236,48 @@
             "description": "Permission to deactivate user",
             "module_id": "users",
             "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "save_notifier",
+            "title": "Save Notifier",
+            "description": "Permission to save notifier",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "view_notifiers",
+            "title": "View Notifiers",
+            "description": "Permission to view all notifiers",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "view_notifier",
+            "title": "View Notifier",
+            "description": "Permission to view notifier details",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "update_notifier",
+            "title": "Update Notifier",
+            "description": "Permission to update notifier details",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "activate_notifier",
+            "title": "Activate Notifier",
+            "description": "Permission to activate a notifier",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "deactivate_notifier",
+            "title": "Deactivate Notifier",
+            "description": "Permission to deactivate a notifier",
+            "module_id": "notifiers",
+            "updated_at": "2023-01-13 02:54:26"
         }
     ]
 }

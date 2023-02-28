@@ -32,7 +32,12 @@ class Notifiers_Controller extends BaseController
         return Notifiers_Actions::updateNotifier($request->all(), $urid);
     }
 
-    public function changeStatus(Request $request, $urid) {
-        return Notifiers_Actions::changeNotifierStatus($request->all(), $urid);
+    public function deactivate($urid) {
+        return Notifiers_Actions::deactivateNotifier($urid);
     }
+
+    public function activate($urid) {
+        return Notifiers_Actions::activateNotifier($urid);
+    }
+
 }

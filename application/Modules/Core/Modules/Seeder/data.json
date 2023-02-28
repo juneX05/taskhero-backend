@@ -83,7 +83,7 @@
             "urid": "4cbfe01ec5d7747e7a59bf897002ba6cdf6cfcdf"
         },
         {
-            "name": "permission",
+            "name": "permissions",
             "title": "Permissions",
             "description": "This is the permissions module",
             "status_id": "1",
@@ -91,20 +91,10 @@
             "urid": "dd5713053b602fbea88966f5c28f1b6620e524c7"
         },
         {
-            "name": "membership_type",
-            "title": "Membership Type",
-            "description": "This is the membership type module",
-            "status_id": "1",
-            "updated_at": "2023-01-10 12:23:25",
-            "urid": "a395d3d257d5a5477d3e2139d154914b0655a530"
-        },
-        {
-            "name": "members",
-            "title": "Members",
-            "description": "This is the members module",
-            "status_id": "1",
-            "updated_at": "2023-01-10 12:23:54",
-            "urid": "0908bdad9f41f38b07a22c34871d98dcbd6c9ffa"
+            "name": "notifiers",
+            "title": "Notifiers",
+            "description": "This is the notifiers module",
+            "status_id": "1"
         }
     ]
 }

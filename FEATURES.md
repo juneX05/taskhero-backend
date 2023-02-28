@@ -45,13 +45,16 @@ TASK HERO: BACKEND (LARAVEL EDITION)
     - [x] Change User Permissions
     - [x] Change User Roles
     - [x] Change User Password
-- [ ] Notifiers (Notification Messages Management)
-  - [ ] Create Notifier 
-  - [ ] View Notifiers
-  - [ ] Edit Notifier 
-  - [ ] Delete Notifier
-  - [ ] Activate Notifier
-  - [ ] Deactivate Notifier
+- [x] Notifiers (Notification Messages Management)
+  - [x] Create Notifier 
+  - [x] View Notifiers
+  - [x] Edit Notifier 
+  - [x] Activate Notifier
+  - [x] Deactivate Notifier
+- [ ] Queueing Notifications
+  - [ ] View queue
+  - [ ] Trigger Immediate send per queue item
+  - [ ] Resend Notification per queue item
 - [ ] Dashboard
   - [ ] Total Projects
   - [ ] Total Tasks

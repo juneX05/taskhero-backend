@@ -17,10 +17,8 @@ class CreateNotifiersTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('title')->unique();
-            $table->string('description');
+            $table->string('title');
             $table->longText('message');
-            $table->integer('type');
             $table->integer('status_id');
             $table->timestamps();
             $table->string('urid')->unique();
