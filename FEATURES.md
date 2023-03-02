@@ -56,6 +56,7 @@ TASK HERO: BACKEND (LARAVEL EDITION)
   - [ ] Trigger Immediate send per queue item
   - [ ] Resend Notification per queue item
 - [ ] Dashboard
+  - [x] View Dashboard
   - [ ] Total Projects
   - [ ] Total Tasks
   - [ ] Completed Tasks
