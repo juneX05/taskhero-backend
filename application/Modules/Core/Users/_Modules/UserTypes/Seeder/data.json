@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "user_types",
+        "title": "User Types",
+        "description": "User types module to manage user types.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "users"
+    },
     "data": [
         {
             "name": "developer",

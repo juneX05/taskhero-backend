@@ -16,6 +16,7 @@ class Permissions_Seeder extends Seeder
     {
         $seeder_data = getSeederData('Permissions');
 
+        seedModule($seeder_data['module']);
         seedPermissions($seeder_data['data']); //special case :)
 //        $this->seedData($seeder_data['data']);
     }

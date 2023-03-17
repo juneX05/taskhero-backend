@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Validator;
 class Auth_Controller extends BaseController
 {
 
+    public function mobileLogin(Request $request) {
+        return Auth_Actions::mobileLogin($request->all());
+    }
+
     public function login(Request $request) {
         return Auth_Actions::login($request->all());
     }

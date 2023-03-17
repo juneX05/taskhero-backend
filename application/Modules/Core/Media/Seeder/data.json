@@ -1,0 +1,10 @@
+{
+    "module": {
+        "name": "media",
+        "title": "Media",
+        "description": "Media module to manage all files in the system.",
+        "status_id": 1,
+        "module_type_id": 1,
+        "parent_id": null
+    }
+}

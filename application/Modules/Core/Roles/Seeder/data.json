@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "roles",
+        "title": "Roles",
+        "description": "Roles module to manage system roles.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": null
+    },
     "data": [
         {
             "name": "developer",

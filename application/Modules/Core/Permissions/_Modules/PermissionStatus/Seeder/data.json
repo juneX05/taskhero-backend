@@ -1,0 +1,30 @@
+{
+    "module": {
+        "name": "permission_status",
+        "title": "Permission Status",
+        "description": "Permission Status module used to setup status of user given permissions in the system.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "permissions"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "given",
+            "title": "Given",
+            "color": "green"
+        },
+        {
+            "id": 2,
+            "name": "not_given",
+            "title": "Not Given",
+            "color": "blue"
+        },
+        {
+            "id": 3,
+            "name": "denied",
+            "title": "Denied",
+            "color": "red"
+        }
+    ]
+}

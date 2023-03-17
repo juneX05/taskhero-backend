@@ -5,12 +5,17 @@ namespace Application\Modules\Core\Users;
 
 
 use Application\Modules\Core\Logs\Logs_Actions;
+use Application\Modules\Core\Permissions\_Modules\PermissionStatus\PermissionStatus;
+use Application\Modules\Core\Permissions\_Modules\PermissionStatus\PermissionStatus_Model;
 use Application\Modules\Core\Permissions\Permissions_Model;
+use Application\Modules\Core\Roles\Roles_Model;
+use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions;
 use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Actions;
 use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
 use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Actions;
 use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
 use Application\Modules\Core\Users\_Modules\UserStatus\UserStatus;
+use Application\Modules\Core\Users\_Modules\UserStatus\UserStatus_Model;
 use Application\Modules\Core\Users\_Modules\UserTypes\UserTypes_Model;
 use Application\Modules\ProfileManager;
 use Illuminate\Support\Facades\Auth;
@@ -62,13 +67,16 @@ class Users_Actions
         return sendError('Failed to get user profile.', 500);
     }
 
-    public static function getUserTypes() {
+    public static function splash() {
         if (denied('view_users')) return sendError('Forbidden', 500);
 
         try {
-            $all_data = UserTypes_Model::all();
+            $data = [];
+            $data['user_types'] = UserTypes_Model::all();
+            $data['user_status'] = UserStatus_Model::all();
+            $data['roles'] = Roles_Model::all();
 
-            return sendResponse('Success', $all_data);
+            return sendResponse('Success', $data);
         } catch (\Exception $exception) {
             return sendError($exception->getMessage(), 500);
         }
@@ -86,8 +94,10 @@ class Users_Actions
                     'users.*',
                     'user_types.title as user_type',
                     'user_types.color as user_type_color',
+                    'user_types.urid as user_type_id',
                     'user_status.name as status',
                     'user_status.color as status_color',
+                    'user_status.urid as user_status_id',
                 ]);
 
             if (!$record) return sendError('Record not found', 404);
@@ -106,6 +116,8 @@ class Users_Actions
             $item['permissions'] = Permissions_Model
                 ::whereIn('name',  getUserPermissions($record->id))
                 ->get();
+
+            $item['permission_status'] = PermissionStatus_Model::get();
 
             return sendResponse('Success.', $item);
         } catch (\Exception $exception) {
@@ -194,24 +206,23 @@ class Users_Actions
         }
     }
 
-    public static function changeUserPermissions($request_data) {
+    public static function changeUserPermissions($request_data, $urid) {
         if (denied('change_user_permissions')) return sendError('Forbidden', 500);
 
         try {
+            $user = Users_Model
+                ::whereUrid($urid)
+                ->first();
+            if (!$user) {
+                return sendError('User not found.', 404);
+            }
+
             $validation = validateData($request_data, [
-                'user_id' => ['required'],
                 'permissions' => ['required', 'array'],
             ]);
             if (!$validation['status']) return sendValidationError($validation['error']);
 
             $data = $validation['data'];
-
-            $user = Users_Model
-                ::whereUrid($data['user_id'])
-                ->first();
-            if (!$user) {
-                return sendError('User not found.', 404);
-            }
 
             if (Auth::id() != Users::ADMINISTRATOR_ACCOUNT_ID && $user->id == Users::ADMINISTRATOR_ACCOUNT_ID) {
                 return sendError('You are not allowed.', 403);
@@ -237,23 +248,23 @@ class Users_Actions
         }
     }
 
-    public static function changeUserRoles($request_data) {
+    public static function changeUserRoles($request_data, $urid) {
         if (denied('change_user_roles')) return sendError('Forbidden', 500);
 
         try {
+            $user = Users_Model
+                ::whereUrid($urid)
+                ->first();
+            if (!$user) {
+                return sendError('User not found', 404);
+            }
+
             $validation = validateData($request_data, [
-                'user_id' => ['required'],
                 'roles' => ['required', 'array'],
             ]);
             if (!$validation['status']) return sendValidationError($validation['error']);
 
             $data = $validation['data'];
-            $user = Users_Model
-                ::whereUrid($data['user_id'])
-                ->first();
-            if (!$user) {
-                return sendError('User not found', 404);
-            }
 
             if (Auth::id() != 1 && $user->id == 1) {
                 return sendError('You are not allowed.', 403);
@@ -286,7 +297,7 @@ class Users_Actions
 
         $result = self::processUserRegistration($request_data);
         if ($result['status'] == false ) {
-            if ($result['message'] == 'validation_error') {
+            if (isset($result['message']) && $result['message'] == 'validation_error') {
                 return sendValidationError($result['error']);
             } else {
                 return sendError($result['error'], 500);
@@ -297,14 +308,14 @@ class Users_Actions
         return sendResponse('User created successfully', $result['data']);
     }
 
-    public static function updateUser($request_data, $urid) {
+    public static function updateUserAccountDetails($request_data, $urid) {
         if(denied('update_user')) return sendError('Forbidden', 403);
 
         DB::beginTransaction();
 
-        $result = self::processUserUpdate($request_data, $urid);
+        $result = self::processUserUpdateAccountDetails($request_data, $urid);
         if ($result['status'] == false ) {
-            if ($result['message'] == 'validation_error') {
+            if (isset($result['message']) && $result['message'] == 'validation_error') {
                 return sendValidationError($result['error']);
             } else {
                 return sendError($result['error'], 500);
@@ -321,10 +332,15 @@ class Users_Actions
             $validation = validateData($request_data, [
                 'name' => 'required',
                 'email' => 'required|email|unique:users',
-                'user_type_id' => 'required|integer',
+                'user_type_id' => 'required|string',
                 'password' => 'required',
                 'password_confirmation' => 'required|same:password',
-                'role_id' => 'required|integer',
+                'role_id' => 'required|string',
+            ],[
+                'user_type_id.required' => 'User Type is required',
+                'user_type_id.string' => 'User Type is required',
+                'role_id.required' => 'Role is required',
+                'role_id.string' => 'Role is required',
             ]);
 
             if (!$validation['status'])
@@ -359,7 +375,7 @@ class Users_Actions
         }
     }
 
-    public static function processUserUpdate($request_data, $urid) {
+    public static function processUserUpdateAccountDetails($request_data, $urid) {
         try {
             $record = Users_Model::whereUrid($urid)->first();
             if (!$record) return ['status' => false, 'error' => 'User not found'];
@@ -367,26 +383,33 @@ class Users_Actions
             $validation = validateData($request_data, [
                 'name' => 'required',
                 'email' => ['required','email', Rule::unique('users')->ignore($record->id)],
-                'user_type_id' => 'required|integer',
+                'user_type_id' => 'required|string',
+            ],[
+                'user_type_id.required' => 'User Type is required',
+                'user_type_id.string' => 'User Type is required',
             ]);
 
             if (!$validation['status'])
                 return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
 
             $data = $validation['data'];
+
+            $user_types = UserTypes_Model::all()->pluck('id','urid');
+
+            $data['user_type_id'] = $user_types[$data['user_type_id']];
             $old_data = $record->toArray();
 
             $update = $record->update($data);
 
-            if(!$update) return ['status' => false,'error' => 'Failed to update user'];
+            if(!$update) return ['status' => false,'error' => 'Failed to update account details'];
 
             logInfo(__FUNCTION__,[
                 'actor' => self::$ACTOR,
                 'actor_id' => $record->urid,
-                'action_description' => 'User Updated',
+                'action_description' => 'User Account Details Updated',
                 'old_data' => json_encode($old_data),
                 'new_data' => json_encode($record),
-            ],'USER-UPDATE');
+            ],'USER-ACCOUNT-DETAILS-UPDATE');
 
             return ['status' => true, 'data' => $record];
 
@@ -451,40 +474,7 @@ class Users_Actions
         return sendError('Failed to get user profile.', 500);
     }
 
-    public static function update($request_data, $urid){
-        if (denied('update_user')) return sendError('Forbidden', 500);
-
-        $record = Users_Model::whereUrid($urid)->first();
-        if (!$record) return sendError('Record Not Found', 404);
-
-        $old_data = $record->toArray();
-
-        $validation = validateData($request_data, [
-            'name' => ['required', 'string', Rule::unique('users')->ignore($record->id)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($record->id)],
-            'user_type_id' => 'required|integer'
-        ]);
-
-        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
-
-        $data = $validation['data'];
-
-        //Update User name, email and user_type
-        $user_update = $record->update($data);
-        if (!$user_update) return sendError('Failed to Update User', 500);
-
-        logInfo(__FUNCTION__,[
-            'actor' => self::$ACTOR,
-            'actor_id' => $record->urid,
-            'action_description' => 'User Updated',
-            'old_data' => json_encode($old_data),
-            'new_data' => json_encode($request_data),
-        ],'USER-UPDATED');
-
-        return sendResponse('User update Successful.', 500);
-    }
-
-    public static function completeUserRegistration($request_data, $urid){
+    public static function completeUserRegistration($urid){
         if (denied('complete_user_registration')) return sendError('Forbidden', 500);
 
         $record = Users_Model::whereUrid($urid)->first();
@@ -496,39 +486,39 @@ class Users_Actions
 
         $old_data = $record->toArray();
 
-        $validation = validateData($request_data, [
-            'role_id' => 'required|integer',
-            'user_type_id' => 'required|integer'
-        ]);
+//        $validation = validateData($request_data, [
+//            'role_id' => 'required|integer',
+//            'user_type_id' => 'required|integer'
+//        ]);
+//
+//        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
 
-        if (!$validation['status']) return ['status' => false, 'message' => 'validation_error', 'error' => $validation['error']];
-
-        $data = $validation['data'];
+//        $data = $request_data;
         $data['user_status_id'] = UserStatus::ACTIVE;
 
-        DB::beginTransaction();
+//        DB::beginTransaction();
 
         //Update Username, email and user_type
         $user_update = $record->update($data);
         if (!$user_update) return sendError('Failed to Update User', 500);
 
         //Update user role
-        $user_role_update = UserRoles_Actions::batchUpdateOrSaveRoles($record, [
-           [ 'id' => $data['role_id'], 'selected' => true,]
-        ]);
-
-        if (!$user_role_update['status'])
-            return sendError($user_role_update['message'], 500);
+//        $user_role_update = UserRoles_Actions::batchUpdateOrSaveRoles($record, [
+//           [ 'id' => $data['role_id'], 'selected' => true,]
+//        ]);
+//
+//        if (!$user_role_update['status'])
+//            return sendError($user_role_update['message'], 500);
 
         logInfo(__FUNCTION__,[
             'actor' => self::$ACTOR,
             'actor_id' => $record->urid,
             'action_description' => 'User Registration Completed',
             'old_data' => json_encode($old_data),
-            'new_data' => json_encode($request_data),
+            'new_data' => json_encode($record),
         ],'USER-REGISTRATION-COMPLETED');
 
-        DB::commit();
+//        DB::commit();
 
         return sendResponse('User Registration Complete.');
     }
@@ -607,5 +597,26 @@ class Users_Actions
         return sendResponse('User Activated.');
     }
 
+    public static function getUserPermissions($urid) {
+        if (denied('view_user')) return sendError('Forbidden', 500);
 
+        $record = Users_Model::whereUrid($urid)->first();
+        if (!$record) return sendError('User not found', 404);
+
+        $user_permissions = UserPermissions_Model
+            ::where('user_id', $record->id)
+            ->join('status', 'user_permissions.status_id', '=', 'status.id')
+            ->join('permissions', 'user_permissions.permission_id','=', 'permissions.id')
+            ->get([
+                'permissions.id as id',
+                'user_permissions.status_id as status'
+            ]);
+
+        $permissions = Permissions_Model::all();
+
+        return sendResponse('User Permissions', [
+            'user_permissions' => $user_permissions,
+            'all_permissions' => $permissions,
+        ]);
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserTypesTable extends Migration
+return new class extends Migration
 {
     private $table = 'user_types';
     /**
@@ -36,4 +36,4 @@ class CreateUserTypesTable extends Migration
     {
         Schema::dropIfExists($this->table);
     }
-}
+};

@@ -1,4 +1,22 @@
 {
+    "module": {
+        "name": "menus",
+        "title": "Menus",
+        "description": "Menus Module to manage menus and their permissions in the system",
+        "status_id": 1,
+        "module_type_id": 1,
+        "parent_id": null
+    },
+    "permissions": [
+        {
+            "name": "manage_menus",
+            "title": "Manage Menus",
+            "description": "Permission to manage system menus",
+            "module_id": "menus",
+            "updated_at": "2022-12-27 11:30:06",
+            "urid": "91ac3fe097d624127ce11eaba18aa07c3d0e9c26"
+        }
+    ],
     "data": [
         {
             "name": "dashboard",

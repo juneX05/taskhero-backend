@@ -1,4 +1,98 @@
 {
+    "module": {
+        "name": "users",
+        "title": "Users",
+        "description": "Users module to manage user.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": null
+    },
+    "permissions": [
+        {
+            "name": "view_users",
+            "title": "View Users",
+            "description": "View Users of the System",
+            "module_id": "users",
+            "updated_at": "2023-01-08 17:54:11",
+            "urid": "7453007fea4bcb56e51cd7c2e46855b39d8168d5"
+        },
+        {
+            "name": "view_user",
+            "title": "View User",
+            "description": "View User details of the System",
+            "module_id": "users",
+            "updated_at": "2023-01-08 17:54:11",
+            "urid": "e8074fd75d02958039c2ddcfc6ba5bb5b29d1bc8"
+        },
+        {
+            "name": "save_user",
+            "title": "Save User",
+            "description": "Create a user in the system.",
+            "module_id": "users",
+            "updated_at": "2023-01-08 17:54:11",
+            "urid": "b75226ba5fe6c1108cf86401246a23d385a96533"
+        },
+        {
+            "name": "change_user_status",
+            "title": "Change User Status",
+            "description": "Permission to change user status. From either active or in-active",
+            "module_id": "users",
+            "updated_at": "2023-01-08 17:54:11",
+            "urid": "e476459605af9c1be937c35b27030b3d077977eb"
+        },
+        {
+            "name": "change_password",
+            "title": "Change Password",
+            "description": "Permission to change password",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:51",
+            "urid": "e0fb96603e788494c3c037d87378a94954e4e01c"
+        },
+        {
+            "name": "change_user_permissions",
+            "title": "Change User Permissions",
+            "description": "Permission to change user permissions",
+            "module_id": "users",
+            "updated_at": "2023-01-08 17:54:11",
+            "urid": "69d612de4a133b99a71124f13b1f7d17bd5e4459"
+        },
+        {
+            "name": "change_user_password",
+            "title": "Change User Password",
+            "description": "Permission to change user password",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26",
+            "urid": "709374ad3b85d8753a8eed517af28cb8bf8d4141"
+        },
+        {
+            "name": "complete_user_registration",
+            "title": "Complete user registration",
+            "description": "Permission to complete the user registration process",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "activate_user",
+            "title": "Activate user",
+            "description": "Permission to activate the user",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "deactivate_user",
+            "title": "Deactivate user",
+            "description": "Permission to deactivate user",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
+        },
+        {
+            "name": "update_user",
+            "title": "Update user",
+            "description": "Permission to update user",
+            "module_id": "users",
+            "updated_at": "2023-01-13 02:54:26"
+        }
+    ],
     "data" : [
         {
             "name": "Developer Admin",

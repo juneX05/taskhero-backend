@@ -14,8 +14,10 @@ class NotifierTypes_Seeder extends Seeder
      */
     public function run()
     {
-        $seeder_data = getSeederData('NotifierTypes');
+        $seeder_data = getSeederData('Notifiers/_Modules/NotifierTypes');
 
+        seedModule($seeder_data['module']);
+        seedPermissions($seeder_data['permissions']);
         $this->seedData($seeder_data['data']);
     }
 

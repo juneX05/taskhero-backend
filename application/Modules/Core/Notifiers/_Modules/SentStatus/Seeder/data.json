@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "sent_status",
+        "title": "SentStatus",
+        "description": "Sent Statuses for notifications",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "notifiers"
+    },
     "data": [
         {
             "id": 1,

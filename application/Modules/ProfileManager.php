@@ -34,11 +34,13 @@ class ProfileManager
 
     private static function defaultProfile($user) {
         $data = Users_Model::where('users.id', $user->id)
+            ->join('user_types','user_types.id','users.user_type_id')
             ->join('user_status','user_status.id','users.user_status_id')
             ->first([
                 'users.*',
                 'user_status.name as status',
                 'user_status.color as status_color',
+                'user_types.title as user_type',
             ]);
         return [
             'status' => true,

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUsersTableColumns extends Migration
+return new class extends Migration
 {
     private $table = 'users';
     /**
@@ -37,4 +37,4 @@ class AddUsersTableColumns extends Migration
     {
         // Schema::dropIfExists('users');
     }
-}
+};

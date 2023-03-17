@@ -17,8 +17,8 @@ class Users_Controller extends BaseController {
         return Users_Actions::viewUser($urid);
     }
 
-    public function userTypes() {
-        return Users_Actions::getUserTypes();
+    public function splash() {
+        return Users_Actions::splash();
     }
 
     public function changeUserPassword(Request $request) {
@@ -29,12 +29,16 @@ class Users_Controller extends BaseController {
         return Users_Actions::changePassword($request->all());
     }
 
-    public function changePermissions(Request $request) {
-        return Users_Actions::changeUserPermissions($request->all());
+    public function changePermissions(Request $request, $urid) {
+        return Users_Actions::changeUserPermissions($request->all(), $urid);
     }
 
-    public function changeRoles(Request $request) {
-        return Users_Actions::changeUserRoles($request->all());
+    public function getPermissions($urid) {
+        return Users_Actions::getUserPermissions( $urid);
+    }
+
+    public function changeRoles(Request $request, $urid) {
+        return Users_Actions::changeUserRoles($request->all(), $urid);
     }
 
     public function save(Request $request) {
@@ -49,12 +53,12 @@ class Users_Controller extends BaseController {
         return Users_Actions::updateUserProfile($request->all());
     }
 
-    public function update(Request $request, $urid) {
-        return Users_Actions::update($request->all(), $urid);
+    public function updateAccountDetails(Request $request, $urid) {
+        return Users_Actions::updateUserAccountDetails($request->all(), $urid);
     }
 
-    public function completeRegistration(Request $request, $urid) {
-        return Users_Actions::completeUserRegistration($request->all(), $urid);
+    public function completeRegistration($urid) {
+        return Users_Actions::completeUserRegistration($urid);
     }
 
     public function deactivate(Request $request, $urid) {

@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "status",
+        "title": "Status",
+        "description": "Status module to manage system statuses.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": null
+    },
     "data": [
         {
             "id": 1,

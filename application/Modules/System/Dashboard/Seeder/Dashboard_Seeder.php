@@ -16,8 +16,9 @@ class Dashboard_Seeder extends Seeder
     {
         $seeder_data = getSeederData('Dashboard');
 
-        //seedPermissions($seeder_data['permissions']);
-        // $this->seedData($seeder_data['data']);
+        seedModule($seeder_data['module']);
+        seedPermissions($seeder_data['permissions']);
+//         $this->seedData($seeder_data['data']);
     }
 
     // private function seedData($records) {

@@ -1,0 +1,10 @@
+{
+    "module": {
+        "name": "role_permissions",
+        "title": "Role Permissions",
+        "description": "Role Permissions module to manage permissions assigned to a role.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "roles"
+    }
+}

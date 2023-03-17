@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "notifier_types",
+        "title": "Notifier Types",
+        "description": "Notifier Types module for types of notifications that can be sent.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "notifiers"
+    },
     "data": [
         {
             "id": 1,

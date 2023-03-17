@@ -9,6 +9,7 @@ use Application\Modules\Core\Menus\Menus_Actions;
 use Application\Modules\Core\Users\_Modules\UserStatus\UserStatus;
 use Application\Modules\Core\Users\Users_Actions;
 use Application\Modules\Core\Users\Users_Model;
+use Application\Modules\ProfileManager;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -53,7 +54,7 @@ class Auth_Actions
         return ['status' => true, 'data' => $validator->validated()];
     }
 
-    public static function login($request_data) {
+    public static function mobileLogin($request_data) {
         $validation = self::validateLogin($request_data);
         if (!$validation['status']) return sendValidationError($validation['error']);
 
@@ -88,6 +89,39 @@ class Auth_Actions
         return sendResponse('Login Successful', $user);
     }
 
+    public static function login($request_data) {
+        $validation = self::validateLogin($request_data);
+        if (!$validation['status']) return sendValidationError($validation['error']);
+
+        $data = $validation['data'];
+
+        $auth = Auth::attempt([
+            'email' => $data['email'],
+            'password' => $data['password']
+        ]);
+
+        if ($auth) {
+            $user = Auth::user();
+
+            if ($user->user_status_id == UserStatus::ACTIVE) {
+                logInfo(__FUNCTION__,[
+                    'actor_id' => $user->urid,
+                    'actor' => self::$ACTOR,
+                    'action_description' => 'User Logged In',
+                    'old_data' => null,
+                    'new_data' => json_encode($user),
+                ],'USER-LOGIN');
+
+                $token = $user->createToken('AuthToken')->plainTextToken;
+                $user['token'] = $token;
+                return sendResponse('Login Successful', $user);
+            }
+
+            return sendError('Your Account is not active, Please contact administrator if the problem persists.',401);
+        }
+        return sendError('Login Failed',401);
+    }
+
     public static function logout() {
         $request = request();
         if ($request->bearerToken()) {
@@ -118,12 +152,17 @@ class Auth_Actions
     public static function currentUser() {
         if(!verifyRequest()) return sendError('Unauthenticated', 401);
 
-        $user = request()->user();
+        $profile = ProfileManager::fetch(request()->user());
+        if (!$profile['status']) {
+            return sendError('User has no profile', 500);
+        }
+
+        $user = $profile['data']['user'];
 
         $sidebar_menus = Menus_Actions::sidebarMenus();
 
         $response = [
-            'permissions' => getUserPermissions($user->id),
+            'permissions' => getUserPermissions(request()->user()->id),
             'user' => $user,
             'menus' => $sidebar_menus
         ];

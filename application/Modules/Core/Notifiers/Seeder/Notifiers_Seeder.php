@@ -16,7 +16,8 @@ class Notifiers_Seeder extends Seeder
     {
         $seeder_data = getSeederData('Notifiers');
 
-        //seedPermissions($seeder_data['permissions']);
+        seedModule($seeder_data['module']);
+        seedPermissions($seeder_data['permissions']);
         $this->seedData($seeder_data['data']);
     }
 

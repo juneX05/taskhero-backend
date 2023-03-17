@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 
-class CreateStatusTable extends Migration {
+return new class extends Migration
+{
 
     private $table = 'status';
 
@@ -24,4 +25,4 @@ class CreateStatusTable extends Migration {
         Schema::dropIfExists($this->table);
     }
 
-}
+};

@@ -61,12 +61,6 @@ class Permissions_Actions
             return sendError('Failed to save permission', 500);
         }
 
-        UserPermissions_Actions::saveUserPermission([
-            'user_id' => 1,
-            'permission_id' => $item->id,
-            'status_id' => 1
-        ]);
-
         RolePermissions_Actions::saveRolePermission([
             'role_id' => 1,
             'permission_id' => $item->id,

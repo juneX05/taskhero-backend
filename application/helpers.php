@@ -2,6 +2,8 @@
 
 use Application\ApplicationBootstrapper;
 use Application\Modules\Core\Logs\Logs_Actions;
+use Application\Modules\Core\Modules\Modules_Actions;
+use Application\Modules\Core\Modules\Modules_Model;
 use Application\Modules\Core\Permissions\Permissions_Actions;
 use Application\Modules\Core\Permissions\Permissions_Model;
 use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
@@ -107,6 +109,12 @@ function seedPermissions($permissions) {
     }
 }
 
+function seedModule($module) {
+    if (!Modules_Model::whereName($module['name'])->first()) {
+        Modules_Model::create($module);
+    }
+}
+
 function application_path() {
     return base_path() . DIRECTORY_SEPARATOR . 'application';
 }
@@ -141,13 +149,19 @@ function getSeederData($module) {
         $seeder_data['data'] = [];
     }
 
+    if (!isset($seeder_data['module'])) {
+        $seeder_data['module'] = [];
+    }
+
     return $seeder_data;
 }
 
 function getUserPermissions($user_id) {
     $permission_key = 'permissions.name';
 
-    $user_roles_data = UserRoles_Model::whereUserId($user_id)->pluck('role_id')->toArray();
+    $user_roles_data = UserRoles_Model::whereUserId($user_id)
+        ->whereStatusId(1)
+        ->pluck('role_id')->toArray();
 
     $roles_permissions = RolePermissions_Model::whereIn('role_id', $user_roles_data)
         ->join('permissions', 'role_permissions.permission_id','=', 'permissions.id')
@@ -162,7 +176,7 @@ function getUserPermissions($user_id) {
         ->pluck('status_id', $permission_key)
         ->toArray();
 
-    $user_permissions = array_merge_recursive($roles_permissions, $users_permissions);
+    $user_permissions = array_merge($roles_permissions, $users_permissions);
 
     $permissions = [];
     foreach ($user_permissions as $permission => $status) {
@@ -179,8 +193,8 @@ function denied($permission) {
     return Gate::denies($permission);
 }
 
-function validateData($request_data, $rules) {
-    $validator = Validator::make($request_data, $rules);
+function validateData($request_data, $rules, $messages = []) {
+    $validator = Validator::make($request_data, $rules, $messages);
 
     if ($validator->fails()) {
         return ['status' => false, 'error' => $validator->errors()];
@@ -195,6 +209,12 @@ function dde($data) {
 }
 
 function verifyRequest() {
+    if (!request()->bearerToken()) {
+//        dd(Auth::user());
+
+        return Auth::check();
+    }
+
     $token = PersonalAccessToken::findToken(request()->bearerToken());
 
     if ($token) return true;

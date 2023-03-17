@@ -1,100 +1,43 @@
 {
+    "module": {
+        "name": "modules",
+        "title": "Modules",
+        "description": "Module manager to manage modules in the system",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": null
+    },
     "permissions": [
         {
             "name": "view_modules",
             "title": "View Modules",
             "description": "Permission to view system modules",
-            "module_id": "5",
-            "updated_at": "2022-12-27 11:30:15",
-            "urid": "5c457a0432d7f22ea1bf5d3e8cd8d18a31a904c6"
+            "module_id": "modules"
         },
         {
             "name": "save_module",
             "title": "Save Module",
             "description": "Permission to create system module",
-            "module_id": "5"
+            "module_id": "modules"
         },
         {
             "name": "view_module",
             "title": "View Module",
             "description": "Permission to view system module details",
-            "module_id": "5"
+            "module_id": "modules"
         },
         {
             "name": "update_module",
             "title": "Update Module",
             "description": "Permission to update system module",
-            "module_id": "5"
+            "module_id": "modules"
         },
         {
             "name": "change_module_status",
             "title": "Change Module Status",
             "description": "Permission to change status of a system module",
-            "module_id": "5"
+            "module_id": "modules"
         }
     ],
-    "data": [
-        {
-            "name": "dashboard",
-            "title": "Dashboard",
-            "description": "This is the dashboard module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:10:43",
-            "urid": "8364937c676a19fc0002fac88a95ad379bbec034"
-        },
-        {
-            "name": "users",
-            "title": "Users",
-            "description": "This is the users module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:12:36",
-            "urid": "e3325c8f2232b013244a3e484cc30c9c518ad449"
-        },
-        {
-            "name": "roles",
-            "title": "Roles",
-            "description": "This is the roles module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:12:55",
-            "urid": "8d2e8dfef79c5cd2a69b7785019b9cb1c8bd9912"
-        },
-        {
-            "name": "menus",
-            "title": "Menus",
-            "description": "This is the menus module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:13:14",
-            "urid": "1673a66b5d32900475068014933739d0397124a8"
-        },
-        {
-            "name": "modules",
-            "title": "Modules",
-            "description": "This is the modules module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:15:53",
-            "urid": "de63f5ecbaebb17ce504286441dd49b629db7fe9"
-        },
-        {
-            "name": "logs",
-            "title": "Logs",
-            "description": "This is the logs module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:18:35",
-            "urid": "4cbfe01ec5d7747e7a59bf897002ba6cdf6cfcdf"
-        },
-        {
-            "name": "permissions",
-            "title": "Permissions",
-            "description": "This is the permissions module",
-            "status_id": "1",
-            "updated_at": "2022-12-27 11:30:42",
-            "urid": "dd5713053b602fbea88966f5c28f1b6620e524c7"
-        },
-        {
-            "name": "notifiers",
-            "title": "Notifiers",
-            "description": "This is the notifiers module",
-            "status_id": "1"
-        }
-    ]
+    "data": []
 }

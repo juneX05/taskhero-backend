@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSentStatusTable extends Migration
+return new class extends Migration
 {
     private $table = 'sent_status';
     /**
@@ -33,4 +33,4 @@ class CreateSentStatusTable extends Migration
     {
         Schema::dropIfExists($this->table);
     }
-}
+};

@@ -1,4 +1,12 @@
 {
+    "module": {
+        "name": "dashboard",
+        "title": "Dashboard",
+        "description": "Dashboard module to manage dashboards for users.",
+        "module_type_id": 2,
+        "status_id": 1,
+        "parent_id": null
+    },
     "permissions": [
         {
             "name": "view_developers_dashboard",

@@ -14,9 +14,10 @@ class RolePermissions_Seeder extends Seeder
      */
     public function run()
     {
-        $seeder_data = getSeederData('RolePermissions');
+        $seeder_data = getSeederData('Roles/_Modules/RolePermissions');
 
-        //seedPermissions($seeder_data['permissions']);
+        seedModule($seeder_data['module']);
+        seedPermissions($seeder_data['permissions']);
         $this->seedData($seeder_data['data']);
     }
 

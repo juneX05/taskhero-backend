@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModulesTable extends Migration
+return new class extends Migration
 {
     private $table = 'modules';
     /**
@@ -19,7 +19,9 @@ class CreateModulesTable extends Migration
             $table->string('name')->unique();
             $table->string('title')->unique();
             $table->longText('description');
-            $table->string('status_id');
+            $table->integer('status_id')->default(1);
+            $table->integer('module_type_id');
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
             $table->string('urid')->unique();
         });
@@ -34,4 +36,4 @@ class CreateModulesTable extends Migration
     {
         Schema::dropIfExists($this->table);
     }
-}
+};

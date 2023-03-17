@@ -70,6 +70,7 @@ class Users_Model extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'id',
         'password',
         'remember_token',
     ];
@@ -87,7 +88,7 @@ class Users_Model extends Authenticatable
     {
         parent::boot();
 
-        static::saving(function ($model) {
+        static::creating(function ($model) {
             $model->urid = sha1(hrtime(true));
         });
     }

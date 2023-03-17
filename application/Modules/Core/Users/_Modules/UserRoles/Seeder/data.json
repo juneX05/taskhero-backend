@@ -1,13 +1,23 @@
 {
+    "module": {
+        "name": "user_roles",
+        "title": "User Roles",
+        "description": "User roles module to manage user roles.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "users"
+    },
     "data": [
         {
             "user_id" : 1,
             "role_id" : 1,
+            "role_type_id" : 1,
             "status_id" : 1
         },
         {
             "user_id" : 2,
             "role_id" : 2,
+            "role_type_id" : 1,
             "status_id" : 1
         }
     ]

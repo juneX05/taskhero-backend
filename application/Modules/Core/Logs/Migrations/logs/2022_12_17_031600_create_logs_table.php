@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLogsTable extends Migration
+return new class extends Migration
 {
     protected $connection = 'db_log';
     private $table = 'logs';
@@ -40,4 +40,4 @@ class CreateLogsTable extends Migration
     {
         Schema::connection($this->connection)->dropIfExists($this->table);
     }
-}
+};
