@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model query()
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string $title
@@ -26,6 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Status_Model whereUrid($value)
+ * @mixin \Eloquent
  */
 class Status_Model extends BaseModel
 {

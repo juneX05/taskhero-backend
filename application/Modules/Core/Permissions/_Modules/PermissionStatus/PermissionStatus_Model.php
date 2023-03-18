@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model query()
- * @mixin \Eloquent
  * @property int $id
  * @property string $name
  * @property string $title
@@ -26,6 +25,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PermissionStatus_Model whereUrid($value)
+ * @mixin \Eloquent
  */
 class PermissionStatus_Model extends BaseModel
 {

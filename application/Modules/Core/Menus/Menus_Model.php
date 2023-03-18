@@ -45,11 +45,11 @@ use Application\Modules\BaseModel;
  * @method static \Illuminate\Database\Eloquent\Builder|Menus_Model whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Menus_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Menus_Model whereUrid($value)
- * @mixin \Eloquent
  * @property string|null $permission_name
  * @method static \Illuminate\Database\Eloquent\Builder|Menus_Model wherePermissionName($value)
  * @property int|null $status_id
  * @method static \Illuminate\Database\Eloquent\Builder|Menus_Model whereStatusId($value)
+ * @mixin \Eloquent
  */
 class Menus_Model extends BaseModel {
     protected $table = 'menus';

@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|UserRoles_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserRoles_Model whereUrid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserRoles_Model whereUserId($value)
+ * @property int $role_type_id
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRoles_Model whereRoleTypeId($value)
  * @mixin \Eloquent
  */
 class UserRoles_Model extends BaseModel

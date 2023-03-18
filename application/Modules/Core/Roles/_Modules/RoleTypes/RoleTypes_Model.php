@@ -25,6 +25,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereUrid($value)
+ * @property string $name
+ * @property string $title
+ * @property string $color
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleTypes_Model whereTitle($value)
  * @mixin \Eloquent
  */
 class RoleTypes_Model extends BaseModel

@@ -27,9 +27,13 @@ use Application\Modules\BaseModel;
  * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereUrid($value)
- * @mixin \Eloquent
  * @property string $status_id
  * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereStatusId($value)
+ * @property int $module_type_id
+ * @property int|null $parent_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereModuleTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Modules_Model whereParentId($value)
+ * @mixin \Eloquent
  */
 class Modules_Model extends BaseModel {
     protected $table = 'modules';

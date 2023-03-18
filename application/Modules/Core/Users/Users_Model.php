@@ -42,6 +42,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereUserStatusId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereUserTypeId($value)
+ * @property int|null $created_by
+ * @property string|null $notes
+ * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereNotes($value)
  * @mixin \Eloquent
  */
 class Users_Model extends Authenticatable
