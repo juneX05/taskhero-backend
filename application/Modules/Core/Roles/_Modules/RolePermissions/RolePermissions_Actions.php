@@ -3,6 +3,7 @@
 
 namespace Application\Modules\Core\Roles\_Modules\RolePermissions;
 
+use Application\Modules\Core\Permissions\Permissions_Model;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,32 +33,63 @@ class RolePermissions_Actions
         }
     }
 
-    private static function rolePermissions($role_id) {
-        return RolePermissions_Model
-            ::whereRoleId($role_id)
-            ->join('permissions', 'permissions.id', 'role_permissions.permission_id')
-            ->where('status_id', 1)
-            ->get([
-                'permissions.title'
-            ])
+
+    public static function permissionsList($role_id) {
+
+        $all_permissions_id = Permissions_Model::all()->pluck('id');
+
+        $roles_permissions = RolePermissions_Model::whereIn('role_id', [$role_id])
+            ->join('permissions', 'role_permissions.permission_id','=', 'permissions.id')
+            ->distinct()
+            ->pluck('role_permissions.status_id','permissions.id')
             ->toArray();
+
+        $permissions = [];
+
+        foreach ($all_permissions_id as $permission_id) {
+            if (isset($roles_permissions[$permission_id])) {
+                if ($roles_permissions[$permission_id] == 1){
+                    $status = 'given';
+                } else {
+                    $status = 'denied';
+                }
+            } else {
+                $status = 'not_given';
+            }
+            $permissions[$permission_id] = $status;
+        }
+
+        return $permissions;
     }
 
     public static function batchUpdateOrSavePermissions($role, $permissions) {
         try {
-            $old_data = self::rolePermissions($role->id);
+            $role_permissions = self::permissionsList($role->id);
+            $new_permissions = $permissions + $role_permissions;
 
-            foreach ($permissions as $record) {
-                $status_id = $record['selected'] == true ? 1 : 2;
-                $permission_id = $record['id'];
+            $difference = array_diff_assoc($new_permissions,$role_permissions);
 
-                $result = RolePermissions_Model
-                    ::updateOrCreate([
-                        'role_id' => $role->id,
-                        'permission_id' => $permission_id
-                    ],[
-                        'status_id' => $status_id
-                    ]);
+            $old_data = $role_permissions;
+
+            foreach ($difference as $id => $status) {
+                $status_id = $status == 'given' ? 1 : 2;
+                $permission_id = $id;
+                if ($status == 'given' || $status == 'denied') {
+
+                    $result = RolePermissions_Model
+                        ::updateOrCreate([
+                            'role_id' => $role->id,
+                            'permission_id' => $permission_id
+                        ],[
+                            'status_id' => $status_id
+                        ]);
+                } else {
+                    $result = RolePermissions_Model
+                        ::where([
+                            'permission_id' => $permission_id,
+                            'role_id' => $role->id,
+                        ])->delete();
+                }
 
                 if (!$result) {
                     return [
@@ -72,7 +104,7 @@ class RolePermissions_Actions
                 }
             }
 
-            $new_data = self::rolePermissions($role->id);
+            $new_data = $difference;
 
             logInfo(__FUNCTION__,[
                 'actor_id' => $role->urid,

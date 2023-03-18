@@ -39,8 +39,16 @@ class Roles_Controller extends BaseController
         return Roles_Actions::getRoleStatuses();
     }
 
-    public function changeStatus(Request $request, $urid) {
-        return Roles_Actions::changeRoleStatus($request->all(), $urid);
+    public function activate(Request $request,$urid) {
+        return Roles_Actions::activateRole($request->all(), $urid);
+    }
+
+    public function deactivate(Request $request,$urid) {
+        return Roles_Actions::deactivateRole($request->all(), $urid);
+    }
+
+    public function getPermissions($urid) {
+        return Roles_Actions::getRolePermissions($urid);
     }
 
 }

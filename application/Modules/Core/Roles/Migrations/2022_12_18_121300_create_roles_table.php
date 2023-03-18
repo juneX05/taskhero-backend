@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('color')->default('dark');
             $table->integer('user_id');
             $table->integer('status_id')->default(1);
+            $table->text('notes')->nullable();
             $table->timestamps();
             $table->string('urid')->unique();
         });
