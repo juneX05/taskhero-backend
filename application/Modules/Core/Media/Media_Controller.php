@@ -13,7 +13,7 @@ class Media_Controller extends BaseController
 
     public function view($urid)
     {
-        return Media_Actions::viewFile($urid);
+        return Media::viewFile($urid);
     }
 
 }

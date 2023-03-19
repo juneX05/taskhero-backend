@@ -1,0 +1,24 @@
+{
+    "module": {
+        "name": "project_positions",
+        "title": "Project Positions",
+        "description": "Project Positions module to manage positions for a project.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "projects"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "team_leader",
+            "title": "Team Leader",
+            "color": "blue"
+        },
+        {
+            "id": 2,
+            "name": "member",
+            "title": "Member",
+            "color": "orange"
+        }
+    ]
+}

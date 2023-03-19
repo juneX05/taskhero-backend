@@ -1,0 +1,11 @@
+{
+    "module": {
+        "name": "project_assignees",
+        "title": "Project Assignees",
+        "description": "Project Assignees module to manage project assignees on a particular project.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "projects"
+    },
+    "data": []
+}

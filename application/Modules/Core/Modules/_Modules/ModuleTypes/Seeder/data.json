@@ -1,0 +1,24 @@
+{
+    "module": {
+        "name": "module_types",
+        "title": "Module Types",
+        "description": "Module Types Module to manage system module types",
+        "status_id": 1,
+        "module_type_id": 1,
+        "parent_id": "modules"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "core",
+            "title": "Core",
+            "color": "violet"
+        },
+        {
+            "id": 2,
+            "name": "system",
+            "title": "System",
+            "color": "green"
+        }
+    ]
+}

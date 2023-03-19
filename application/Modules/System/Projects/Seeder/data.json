@@ -1,0 +1,43 @@
+{
+    "module": {
+        "name": "projects",
+        "title": "Projects",
+        "description": "Projects Module to manage projects and their permissions in the system",
+        "status_id": 1,
+        "module_type_id": 1,
+        "parent_id": null
+    },
+    "permissions": [
+        {
+            "name": "view_projects",
+            "title": "View Projects",
+            "description": "Permission to view system projects",
+            "module_id": "projects"
+        },
+        {
+            "name": "create_project",
+            "title": "Create Project",
+            "description": "Permission to create system projects",
+            "module_id": "projects"
+        },
+        {
+            "name": "view_project",
+            "title": "View Project Details",
+            "description": "Permission to view system project details",
+            "module_id": "projects"
+        },
+        {
+            "name": "activate_project",
+            "title": "Activate Project",
+            "description": "Permission to activate project",
+            "module_id": "projects"
+        },
+        {
+            "name": "suspend_project",
+            "title": "Suspend Project",
+            "description": "Permission to suspend project",
+            "module_id": "projects"
+        }
+    ],
+    "data": []
+}

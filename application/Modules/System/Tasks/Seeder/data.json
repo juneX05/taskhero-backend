@@ -1,0 +1,11 @@
+{
+    "module": {
+        "name": "task",
+        "title": "Task",
+        "description": "Task module to manage tasks.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": null
+    },
+   "data": []
+}

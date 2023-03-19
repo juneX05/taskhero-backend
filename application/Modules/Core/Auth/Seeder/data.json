@@ -1,0 +1,10 @@
+{
+    "module": {
+        "name": "auth",
+        "title": "Auth",
+        "description": "Authentication Module dealing with authentication of the users",
+        "status_id": 1,
+        "module_type_id": 1,
+        "parent_id": null
+    }
+}

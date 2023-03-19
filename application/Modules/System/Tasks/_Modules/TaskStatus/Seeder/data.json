@@ -1,0 +1,36 @@
+{
+    "module": {
+        "name": "task_status",
+        "title": "Task Status",
+        "description": "Task Status module to manage tasks.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "completed",
+            "title": "Completed",
+            "color": "green"
+        },
+        {
+            "id": 2,
+            "name": "pending",
+            "title": "Pending",
+            "color": "orange"
+        },
+        {
+            "id": 3,
+            "name": "new",
+            "title": "New",
+            "color": "blue"
+        },
+        {
+            "id": 4,
+            "name": "overdue",
+            "title": "Overdue",
+            "color": "red"
+        }
+    ]
+}

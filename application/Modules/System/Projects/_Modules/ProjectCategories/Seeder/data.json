@@ -1,0 +1,66 @@
+{
+    "module": {
+        "name": "project_categories",
+        "title": "Project Categories",
+        "description": "Project Categories module to manage project categories.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "projects"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "ui_ux_design",
+            "title": "UI/UX Design",
+            "color": "blue"
+        },
+        {
+            "id": 2,
+            "name": "website_development",
+            "title": "Website Development",
+            "color": "orange"
+        },
+        {
+            "id": 3,
+            "name": "app_development",
+            "title": "App Development",
+            "color": "blue"
+        },
+        {
+            "id": 4,
+            "name": "backend_development",
+            "title": "Backend Development",
+            "color": "green"
+        },
+        {
+            "id": 5,
+            "name": "api_development",
+            "title": "API Development",
+            "color": "green"
+        },
+        {
+            "id": 6,
+            "name": "unit_testing",
+            "title": "Unit Testing",
+            "color": "orange"
+        },
+        {
+            "id": 7,
+            "name": "feature_testing",
+            "title": "Feature Testing",
+            "color": "orange"
+        },
+        {
+            "id": 8,
+            "name": "system_documentation",
+            "title": "System Documentation",
+            "color": "blue"
+        },
+        {
+            "id": 9,
+            "name": "api_documentation",
+            "title": "API Documentation",
+            "color": "violet"
+        }
+    ]
+}

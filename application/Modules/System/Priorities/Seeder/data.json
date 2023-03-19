@@ -1,0 +1,30 @@
+{
+    "module": {
+        "name": "priority",
+        "title": "Priority",
+        "description": "Priority module to manage priorities.",
+        "module_type_id": 2,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": [
+        {
+            "id": 1,
+            "name": "high",
+            "title": "High",
+            "color": "red"
+        },
+        {
+            "id": 2,
+            "name": "medium",
+            "title": "Medium",
+            "color": "orange"
+        },
+        {
+            "id": 3,
+            "name": "low",
+            "title": "Low",
+            "color": "green"
+        }
+    ]
+}

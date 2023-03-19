@@ -30,6 +30,8 @@ use Application\Modules\BaseModel;
  * @method static \Illuminate\Database\Eloquent\Builder|Roles_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Roles_Model whereUrid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Roles_Model whereUserId($value)
+ * @property string|null $notes
+ * @method static \Illuminate\Database\Eloquent\Builder|Roles_Model whereNotes($value)
  * @mixin \Eloquent
  */
 class Roles_Model extends BaseModel {

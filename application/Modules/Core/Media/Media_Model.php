@@ -40,6 +40,7 @@ class Media_Model extends BaseModel
     use HasFactory;
 
     protected $table = 'media';
+    protected $appends = array('url');
     /**
      * The attributes that are mass assignable.
      *
@@ -55,4 +56,9 @@ class Media_Model extends BaseModel
         'mime_type',
         'urid',
     ];
+
+    public function getUrlAttribute()
+    {
+        return env('APP_URL') . '/api/media/' . $this->urid . '/view';
+    }
 }

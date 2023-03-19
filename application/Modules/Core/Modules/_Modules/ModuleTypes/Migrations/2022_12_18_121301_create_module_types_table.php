@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    private $table = 'module_types';
     /**
      * Run the migrations.
      *
@@ -13,10 +14,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::create($this->table, function (Blueprint $table) {
+            $table->integer('id')->primary();
+            $table->string('name')->unique();
+            $table->string('title')->unique();
+            $table->string('color');
+            $table->timestamps();
+            $table->string('urid')->unique();
         });
     }
 
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists($this->table);
     }
 };
