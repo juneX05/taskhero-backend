@@ -38,6 +38,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Tasks_Model whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tasks_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tasks_Model whereUrid($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Users_Model> $assignees
+ * @property-read int|null $assignees_count
+ * @property-read Priorities_Model|null $priority
  * @mixin \Eloquent
  */
 class Tasks_Model extends BaseModel

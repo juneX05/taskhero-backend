@@ -1,0 +1,11 @@
+{
+    "module": {
+        "name": "task_steps",
+        "title": "Task Steps",
+        "description": "Task Steps module to manage task steps.",
+        "module_type_id": 2,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": []
+}

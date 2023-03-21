@@ -48,6 +48,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $notes
  * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereCreatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Users_Model whereNotes($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Tasks_Model> $tasks
+ * @property-read int|null $tasks_count
  * @mixin \Eloquent
  */
 class Users_Model extends Authenticatable

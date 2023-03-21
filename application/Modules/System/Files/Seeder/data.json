@@ -1,0 +1,19 @@
+{
+    "module": {
+        "name": "files",
+        "title": "Files",
+        "description": "Files module to manage file for projects, tasks and task steps.",
+        "module_type_id": 2,
+        "status_id": 1,
+        "parent_id": null
+    },
+    "permissions": [
+        {
+            "name": "view_files",
+            "title": "View Files",
+            "description": "Permission to view system files",
+            "module_id": "files"
+        }
+    ],
+    "data": []
+}
