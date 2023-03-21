@@ -13,30 +13,19 @@ class Tasks_Controller extends BaseController
         return Tasks_Actions::index();
     }
 
-    public function view($urid)
+    public function myTasks()
     {
-        return Tasks_Actions::viewNotifier($urid);
+        return Tasks_Actions::myTasks();
     }
 
-    public function statuses()
+    public function splash()
     {
-        return Tasks_Actions::getNotifierStatuses();
+        return Tasks_Actions::splash();
     }
 
-    public function save(Request $request) {
-       return Tasks_Actions::saveNotifier($request->all());
-    }
-
-    public function update(Request $request, $urid) {
-        return Tasks_Actions::updateNotifier($request->all(), $urid);
-    }
-
-    public function deactivate($urid) {
-        return Tasks_Actions::deactivateNotifier($urid);
-    }
-
-    public function activate($urid) {
-        return Tasks_Actions::activateNotifier($urid);
+    public function save(Request $request)
+    {
+        return Tasks_Actions::saveTask($request->all());
     }
 
 }

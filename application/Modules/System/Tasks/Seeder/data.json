@@ -1,11 +1,31 @@
 {
     "module": {
-        "name": "task",
-        "title": "Task",
-        "description": "Task module to manage tasks.",
-        "module_type_id": 1,
+        "name": "tasks",
+        "title": "Tasks",
+        "description": "Tasks module to manage task in the system.",
+        "module_type_id": 2,
         "status_id": 1,
         "parent_id": null
     },
-   "data": []
+    "permissions": [
+        {
+            "name": "view_tasks",
+            "title": "View Tasks",
+            "description": "Permission to view system tasks",
+            "module_id": "tasks"
+        },
+        {
+            "name": "create_task",
+            "title": "Create Task",
+            "description": "Permission to create system tasks",
+            "module_id": "tasks"
+        },
+        {
+            "name": "view_task",
+            "title": "View Task",
+            "description": "Permission to view system task details",
+            "module_id": "tasks"
+        }
+    ],
+    "data": []
 }

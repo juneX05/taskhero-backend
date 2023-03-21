@@ -12,65 +12,38 @@ use Application\Modules\System\Projects\_Modules\ProjectAssignees\ProjectAssigne
 use Application\Modules\System\Projects\_Modules\ProjectCategories\ProjectCategories_Model;
 
 /**
- * Application\Modules\Core\Projects\Projects_Model
+ * Application\Modules\System\Projects\Projects_Model
  *
  * @property int $id
- * @property string $name
  * @property string $title
- * @property string $icon
- * @property string $link
- * @property int|null $parent
- * @property string $type
- * @property int $position
- * @property string $category
- * @property int $auth
- * @property int $sidebar_visibility
- * @property int $navbar_visibility
- * @property string|null $file_link
- * @property int|null $permission_id
+ * @property string $description
+ * @property string $media_id
+ * @property int $priority_id
+ * @property int $project_category_id
+ * @property string|null $start_date
+ * @property string|null $end_date
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $urid
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Users_Model> $assignees
+ * @property-read int|null $assignees_count
+ * @property-read ProjectCategories_Model|null $category
+ * @property-read Media_Model|null $media
+ * @property-read Priorities_Model|null $priority
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model query()
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereAuth($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereCategory($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereFileLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereIcon($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereLink($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereNavbarVisibility($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereParent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model wherePermissionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model wherePosition($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereSidebarVisibility($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereUrid($value)
- * @property string|null $permission_name
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model wherePermissionName($value)
- * @property int|null $status_id
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereStatusId($value)
- * @property string $description
- * @property string $image
- * @property int $priority_id
- * @property int $category_id
- * @property string $start_date
- * @property string $end_date
- * @property string $assigned_users
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereAssignedUsers($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereEndDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereMediaId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model wherePriorityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereStartDate($value)
- * @property int $project_category_id
  * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereProjectCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Projects_Model whereUrid($value)
  * @mixin \Eloquent
  */
 class Projects_Model extends BaseModel {

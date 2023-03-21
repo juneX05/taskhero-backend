@@ -1,12 +1,14 @@
 <?php
 
+use Application\ApplicationBootstrapper;
+use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    private $table = 'task_status';
+    private $table = TaskAssignees::TABLE;
     /**
      * Run the migrations.
      *
@@ -14,11 +16,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create($this->table, function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->string('name')->unique();
-            $table->string('title')->unique();
-            $table->string('color');
+        $columns = TaskAssignees::COLUMNS;
+        Schema::create($this->table, function (Blueprint $table) use ($columns) {
+
+            foreach ($columns as $column) {
+               ApplicationBootstrapper::processMigrationColumns($table, $column);
+            }
+
             $table->timestamps();
             $table->string('urid')->unique();
         });

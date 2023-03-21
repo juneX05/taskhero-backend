@@ -15,5 +15,9 @@ Route::middleware('auth:sanctum')
         Route::post('/change-status', 'changeStatus');
         Route::get('/{module_id}/view', 'view');
 
+        Route::post('/seed', function (\Illuminate\Http\Request $request) {
+            \Application\Modules\Core\Modules\Modules::runSeeder($request['class']);
+        });
+
     })
 ;

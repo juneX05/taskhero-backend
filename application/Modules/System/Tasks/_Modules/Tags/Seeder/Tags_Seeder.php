@@ -1,12 +1,12 @@
 <?php
 
-namespace Application\Modules\System\Tasks\Seeder;
+namespace Application\Modules\System\Tasks\_Modules\Tags\Seeder;
 
-use Application\Modules\System\Tasks\Tasks;
-use Application\Modules\System\Tasks\Tasks_Model;
+use Application\Modules\System\Tasks\_Modules\Tags\Tags;
+use Application\Modules\System\Tasks\_Modules\Tags\Tags_Model;
 use Illuminate\Database\Seeder;
 
-class Tasks_Seeder extends Seeder
+class Tags_Seeder extends Seeder
 {
     /**
      * Seed the application's database.
@@ -15,7 +15,7 @@ class Tasks_Seeder extends Seeder
      */
     public function run()
     {
-        $seeder_data = getSeederData(Tasks::PATH);
+        $seeder_data = getSeederData(Tags::PATH);
 
         seedModule($seeder_data['module']);
         seedPermissions($seeder_data['permissions']);
@@ -25,7 +25,7 @@ class Tasks_Seeder extends Seeder
 
     private function seedData($records) {
         foreach ($records as $record) {
-            Tasks_Model::create($record);
+            Tags_Model::create($record);
         }
     }
 }

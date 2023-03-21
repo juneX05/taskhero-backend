@@ -9,6 +9,7 @@ use Application\Modules\Core\Permissions\Permissions_Model;
 use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
 use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
 use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;

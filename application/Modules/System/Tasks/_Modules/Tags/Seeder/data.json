@@ -1,0 +1,18 @@
+{
+    "module": {
+        "name": "tags",
+        "title": "Tags",
+        "description": "Tags module to manage task tags entries.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": [
+        { "title" : "Update" },
+        { "title" : "Design" },
+        { "title" : "Mobile App" },
+        { "title" : "Development" },
+        { "title" : "UI/UX Design" },
+        { "title" : "Database" }
+    ]
+}

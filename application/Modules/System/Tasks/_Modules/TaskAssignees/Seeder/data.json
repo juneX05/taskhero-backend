@@ -1,0 +1,11 @@
+{
+    "module": {
+        "name": "task_assignees",
+        "title": "Task Assignees",
+        "description": "Task Assignees module to manage task assignees on a particular task.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": []
+}

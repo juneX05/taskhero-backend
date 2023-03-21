@@ -5,6 +5,7 @@ namespace Application;
 
 
 use Application\Modules\Core\Users\Users_Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
@@ -138,5 +139,89 @@ class ApplicationBootstrapper
         ]);
         Config::set('filesystems.disks', $disks);
 
+    }
+
+    public static function processMigrationColumns(Blueprint $table, $column) {
+        $definition = null;
+
+        $name = $column['name'];
+        $type = $column['type'];
+        $auto_increment = $column['auto_increment'] ?? null;
+        $nullable = $column['nullable'] ?? null;
+        $unique = $column['unique'] ?? null;
+        $default = $column['default'] ?? null;
+
+        if ($name == 'id') {
+            if ($auto_increment) {
+                $table->id();
+            } else {
+                $table->integer($name)->primary();
+            }
+            return $table;
+        }
+
+        if ($type == 'integer'){
+            $definition = $table->integer($name);
+        }
+
+        if ($type == 'date'){
+            $definition = $table->date($name);
+        }
+
+        if ($type == 'date_time'){
+            $definition = $table->dateTime($name);
+        }
+
+        if ($type == 'string'){
+            $definition = $table->string($name);
+        }
+
+        if ($type == 'text'){
+            $definition = $table->text($name);
+        }
+
+        if ($type == 'long_text'){
+            $definition = $table->longText($name);
+        }
+
+        if ($type == 'time'){
+            $definition = $table->time($name);
+        }
+
+        if ($type == 'timestamp'){
+            $definition = $table->timestamp($name);
+        }
+
+        if ($auto_increment != null) {
+            $definition->autoIncrement();
+        }
+
+        if ($nullable != null) {
+            if ($nullable == true) {
+                $definition->nullable();
+            } else {
+                $definition->nullable(false);
+            }
+        }
+
+        if ($unique != null) {
+            if ($unique == true) {
+                $definition->unique();
+            }
+        }
+
+        if ($default != null) {
+            $definition->default($default);
+        }
+
+        return $table;
+    }
+
+    public static function setupFillables($columns) {
+        $fillables = ['urid'];
+        foreach ($columns as $column) {
+            if (isset($column['fillable'])) $fillables[] = $column['name'];
+        }
+        return $fillables;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Application\Modules\Core\Users;
 
+use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees_Model;
+use Application\Modules\System\Tasks\Tasks_Model;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -95,5 +97,16 @@ class Users_Model extends Authenticatable
         static::creating(function ($model) {
             $model->urid = sha1(hrtime(true));
         });
+    }
+
+    public function tasks() {
+        return $this->hasManyThrough(
+            Tasks_Model::class,
+            TaskAssignees_Model::class,
+            'user_id',
+            'id',
+            'id',
+            'task_id'
+        );
     }
 }

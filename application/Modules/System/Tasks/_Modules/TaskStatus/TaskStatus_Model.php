@@ -2,7 +2,9 @@
 
 namespace Application\Modules\System\Tasks\_Modules\TaskStatus;
 
+use Application\ApplicationBootstrapper;
 use Application\Modules\BaseModel;
+use Application\Modules\System\Tasks\_Modules\TaskStatus\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -31,17 +33,14 @@ class TaskStatus_Model extends BaseModel
 {
     use HasFactory;
 
-    protected $table = 'task_status';
+    protected $table = TaskStatus::TABLE;
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'id',
-        'name',
-        'title',
-        'color',
-        'urid',
-    ];
+
+    public function getFillable() {
+        return ApplicationBootstrapper::setupFillables(TaskStatus::COLUMNS);
+    }
 }

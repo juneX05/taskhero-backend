@@ -2,6 +2,7 @@
 
 namespace Application\Modules\System\Tasks\_Modules\TaskStatus\Seeder;
 
+use Application\Modules\System\Tasks\_Modules\TaskStatus\TaskStatus;
 use Application\Modules\System\Tasks\_Modules\TaskStatus\TaskStatus_Model;
 use Illuminate\Database\Seeder;
 
@@ -14,10 +15,10 @@ class TaskStatus_Seeder extends Seeder
      */
     public function run()
     {
-        $seeder_data = getSeederData('Tasks/_Modules/TaskStatus');
+        $seeder_data = getSeederData(TaskStatus::PATH);
 
         seedModule($seeder_data['module']);
-        seedPermissions($seeder_data['permissions']); //special case :)
+        seedPermissions($seeder_data['permissions']);
 
         $this->seedData($seeder_data['data']);
     }

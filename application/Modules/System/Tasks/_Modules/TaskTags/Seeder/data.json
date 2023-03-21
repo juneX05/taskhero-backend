@@ -1,0 +1,11 @@
+{
+    "module": {
+        "name": "task_tags",
+        "title": "Task Tags",
+        "description": "Task Tags module to manage task tags.",
+        "module_type_id": 1,
+        "status_id": 1,
+        "parent_id": "tasks"
+    },
+    "data": []
+}

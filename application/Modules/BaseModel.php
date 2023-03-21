@@ -4,6 +4,14 @@ namespace Application\Modules;
 use Application\Modules\Core\Logs\Logs_Actions;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Application\Modules\BaseModel
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|BaseModel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BaseModel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BaseModel query()
+ * @mixin \Eloquent
+ */
 class BaseModel extends Model
 {
     private $record_urid;

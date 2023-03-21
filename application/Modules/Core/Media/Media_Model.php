@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Media_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Media_Model whereUrid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Media_Model whereUserId($value)
+ * @property-read mixed $url
  * @mixin \Eloquent
  */
 class Media_Model extends BaseModel
