@@ -121,10 +121,8 @@ class ApplicationBootstrapper
             file_put_contents(database_path('db_log_testing.sqlite'),'');
         }
 
-        $allowed_origins = Config::get('cors.allowed_origins');
-        $allowed_origins = array_merge($allowed_origins, [
-            'http://127.0.0.1:5173', 'localhost'
-        ]);
+//        $allowed_origins = Config::get('cors.allowed_origins');
+        $allowed_origins = array_merge( explode(',', env('ALLOWED_ORIGINS')) ?? []);
 
         Config::set('cors.allowed_origins', $allowed_origins);
         Config::set('cors.supports_credentials', true);

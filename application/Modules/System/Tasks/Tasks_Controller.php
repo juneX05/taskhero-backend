@@ -28,4 +28,13 @@ class Tasks_Controller extends BaseController
         return Tasks_Actions::saveTask($request->all());
     }
 
+    public function view($urid)
+    {
+        return Tasks_Actions::viewTask($urid);
+    }
+
+    public function update(Request $request, $urid)
+    {
+        return Tasks_Actions::updateTask($request->all(), $urid);
+    }
 }

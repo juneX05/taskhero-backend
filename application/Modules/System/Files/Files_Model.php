@@ -4,6 +4,7 @@ namespace Application\Modules\System\Files;
 
 use Application\ApplicationBootstrapper;
 use Application\Modules\BaseModel;
+use Application\Modules\Core\Media\Media_Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -43,5 +44,13 @@ class Files_Model extends BaseModel
 
     public function getFillable() {
         return ApplicationBootstrapper::setupFillables(Files::COLUMNS);
+    }
+
+    public function media() {
+        return $this->belongsTo(
+            Media_Model::class,
+            'media_id'
+            ,'id'
+        );
     }
 }

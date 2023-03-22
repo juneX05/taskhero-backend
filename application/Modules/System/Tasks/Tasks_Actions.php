@@ -72,9 +72,9 @@ class Tasks_Actions
                 'start_date' => ['nullable', 'date'],
                 'end_date' => ['nullable', 'date'],
                 'assigned' => ['required'],
-                'tags' => ['nullable','array'],
+                'task_tags' => ['nullable','array'],
             ]);
-            if (!$validation['status']) return $validation;
+            if (!$validation['status']) return sendValidationError($validation['error']);
 
             $data = $validation['data'];
 
@@ -86,14 +86,14 @@ class Tasks_Actions
                 return sendError('Failed to save record', 500);
             }
 
-            $result = TaskAssignees::addUsers($model->id,$data['assigned']);
+            $result = TaskAssignees::manageUsers($model,$data['assigned']);
 
             if (!$result['status']) {
                 return sendError($result['error'], 500);
             }
 
-            if (isset($data['tags'])) {
-                $result = TaskTags::addTags($model->id,$data['tags']);
+            if (isset($data['task_tags'])) {
+                $result = TaskTags::manageTags($model,$data['task_tags']);
             }
 
             if (!$result['status']) {
@@ -116,4 +116,87 @@ class Tasks_Actions
         }
     }
 
+    public static function viewTask($urid) {
+        if (denied('view_task')) return sendError('Forbidden', 500);
+
+        try {
+            $record = Tasks_Model
+                ::whereUrid($urid)
+                ->with(['priority','project.media','status','assignees','steps','files.media', 'tags'])
+                ->first();
+            if (!$record) {
+                return sendError('Record Not found', 404);
+            }
+
+            return sendResponse('Success', $record);
+        } catch (Exception $exception) {
+            return sendError($exception->getMessage(), 500);
+        }
+    }
+
+    public static function updateTask($request_data, $urid) {
+        if (denied('create_task')) return sendError('Forbidden', 500);
+
+        try {
+            $record = Tasks_Model
+                ::whereUrid($urid)
+                ->with(['priority','project','status','assignees','steps','files.media', 'tags'])
+                ->first();
+            if (!$record) {
+                return sendError('Record Not found', 404);
+            }
+
+            $old_data = $record->toArray();
+
+            $validation = validateData($request_data,[
+                'title' => ['required', Rule::unique(self::$TABLE)->ignore($record->id)],
+                'description' => ['required'],
+                'priority_id' => ['required'],
+                'project_id' => ['nullable'],
+                'start_date' => ['nullable', 'date'],
+                'end_date' => ['nullable', 'date'],
+                'assigned' => ['required'],
+                'task_tags' => ['nullable','array'],
+            ]);
+            if (!$validation['status']) return sendValidationError($validation['error']);
+
+            $data = $validation['data'];
+
+            \DB::beginTransaction();
+
+            $update = $record->update($data);
+
+            if(!$update) {
+                return sendError('Failed to update record', 500);
+            }
+
+            $result = TaskAssignees::manageUsers($record,$data['assigned']);
+
+            if (!$result['status']) {
+                return sendError($result['error'], 500);
+            }
+
+            if (isset($data['task_tags'])) {
+                $result = TaskTags::manageTags($record,$data['task_tags']);
+            }
+
+            if (!$result['status']) {
+                return sendError($result['error'], 500);
+            }
+
+            \DB::commit();
+
+            logInfo(__FUNCTION__,[
+                'actor_id' => $record->urid,
+                'actor' => self::$ACTOR,
+                'action_description' => 'Update Task',
+                'old_data' => json_encode($old_data),
+                'new_data' => json_encode($record->toArray()),
+            ],'UPDATE-TASK');
+
+            return sendResponse('Success', $record);
+        } catch (Exception $exception) {
+            return sendError($exception->getMessage(), 500);
+        }
+    }
 }

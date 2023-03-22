@@ -5,8 +5,14 @@ namespace Application\Modules\System\Tasks;
 use Application\ApplicationBootstrapper;
 use Application\Modules\BaseModel;
 use Application\Modules\Core\Users\Users_Model;
+use Application\Modules\System\Files\Files_Model;
 use Application\Modules\System\Priorities\Priorities_Model;
+use Application\Modules\System\Projects\Projects_Model;
+use Application\Modules\System\Tasks\_Modules\Tags\Tags_Model;
 use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees_Model;
+use Application\Modules\System\Tasks\_Modules\TaskStatus\TaskStatus_Model;
+use Application\Modules\System\Tasks\_Modules\TaskSteps\TaskSteps_Model;
+use Application\Modules\System\Tasks\_Modules\TaskTags\TaskTags_Model;
 use Application\Modules\System\Tasks\Tasks;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -75,6 +81,50 @@ class Tasks_Model extends BaseModel
             'user_id',
             'id',
             'id'
+        );
+    }
+
+    public function tags() {
+        return $this->belongsToMany(
+            Tags_Model::class,
+            TaskTags_Model::class,
+            'task_id',
+            'tag_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function project() {
+        return $this->belongsTo(
+            Projects_Model::class
+            , 'project_id'
+            , 'urid'
+            , 'project'
+        );
+    }
+
+    public function status() {
+        return $this->belongsTo(
+            TaskStatus_Model::class
+            , 'task_status_id'
+            , 'id'
+        );
+    }
+
+    public function steps() {
+        return $this->hasMany(
+            TaskSteps_Model::class
+            , 'task_id'
+            , 'id'
+        );
+    }
+
+    public function files() {
+        return $this->hasMany(
+            Files_Model::class
+            , 'task_id'
+            , 'id'
         );
     }
 }

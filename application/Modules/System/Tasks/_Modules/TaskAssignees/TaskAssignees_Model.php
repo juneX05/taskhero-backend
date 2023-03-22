@@ -4,6 +4,7 @@ namespace Application\Modules\System\Tasks\_Modules\TaskAssignees;
 
 use Application\ApplicationBootstrapper;
 use Application\Modules\BaseModel;
+use Application\Modules\Core\Users\Users_Model;
 use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees;
 use Application\Modules\System\Tasks\Tasks_Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,5 +44,9 @@ class TaskAssignees_Model extends BaseModel
 
     public function getFillable() {
         return ApplicationBootstrapper::setupFillables(TaskAssignees::COLUMNS);
+    }
+
+    public function user() {
+        return $this->belongsTo(Users_Model::class, 'user_id', 'id');
     }
 }

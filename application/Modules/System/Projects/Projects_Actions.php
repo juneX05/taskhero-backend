@@ -61,7 +61,7 @@ class Projects_Actions
                 'assigned' => ['required'],
                 'image' => ['required','file'],
             ]);
-            if (!$validation['status']) return $validation;
+            if (!$validation['status']) return sendValidationError($validation['error']);
 
             $data = $validation['data'];
 
