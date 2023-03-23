@@ -9,6 +9,7 @@ use Application\Modules\System\Projects\Projects_Model;
 use Application\Modules\System\Tasks\_Modules\Tags\Tags_Model;
 use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees;
 use Application\Modules\System\Tasks\_Modules\TaskAssignees\TaskAssignees_Model;
+use Application\Modules\System\Tasks\_Modules\TaskStatus\TaskStatus;
 use Application\Modules\System\Tasks\_Modules\TaskTags\TaskTags;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -193,6 +194,77 @@ class Tasks_Actions
                 'old_data' => json_encode($old_data),
                 'new_data' => json_encode($record->toArray()),
             ],'UPDATE-TASK');
+
+            return sendResponse('Success', $record);
+        } catch (Exception $exception) {
+            return sendError($exception->getMessage(), 500);
+        }
+    }
+
+    public static function completeTask($request_data, $urid) {
+        if (denied('complete_task')) return sendError('Forbidden', 500);
+
+        return self::changeStatus(
+            __FUNCTION__
+            ,$urid
+            , $request_data
+            , TaskStatus::COMPLETED
+            , 'Complete Task'
+            , 'COMPLETE-TASK'
+        );
+    }
+
+    public static function reOpenTask($request_data, $urid) {
+        if (denied('re_open_task')) return sendError('Forbidden', 500);
+
+        return self::changeStatus(
+            __FUNCTION__
+            , $urid
+            , $request_data
+            , TaskStatus::PENDING
+            , 'Re-Open Task'
+            , 'RE-OPEN-TASK'
+        );
+    }
+
+    private static function changeStatus($tag, $urid, $request_data, $status, $action_description, $action_type) {
+        try {
+            $record = Tasks_Model
+                ::whereUrid($urid)
+                ->with(['priority','project','status','assignees','steps','files.media', 'tags'])
+                ->first();
+            if (!$record) {
+                return sendError('Record Not found', 404);
+            }
+
+            $old_data = $record->toArray();
+
+            $validation = validateData($request_data,[
+                'notes' => ['required'],
+            ]);
+            if (!$validation['status']) return sendValidationError($validation['error']);
+
+            $data = $validation['data'];
+
+            $data['task_status_id'] = $status;
+
+            \DB::beginTransaction();
+
+            $update = $record->update($data);
+
+            if(!$update) {
+                return sendError('Failed to update record', 500);
+            }
+
+            \DB::commit();
+
+            logInfo($tag,[
+                'actor_id' => $record->urid,
+                'actor' => self::$ACTOR,
+                'action_description' => $action_description,
+                'old_data' => json_encode($old_data),
+                'new_data' => json_encode($record->toArray()),
+            ],$action_type);
 
             return sendResponse('Success', $record);
         } catch (Exception $exception) {

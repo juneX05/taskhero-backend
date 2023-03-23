@@ -37,4 +37,14 @@ class Tasks_Controller extends BaseController
     {
         return Tasks_Actions::updateTask($request->all(), $urid);
     }
+
+    public function complete(Request $request, $urid)
+    {
+        return Tasks_Actions::completeTask($request->all(), $urid);
+    }
+
+    public function reOpen(Request $request, $urid)
+    {
+        return Tasks_Actions::reOpenTask($request->all(), $urid);
+    }
 }

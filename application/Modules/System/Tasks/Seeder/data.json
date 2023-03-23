@@ -25,6 +25,18 @@
             "title": "View Task",
             "description": "Permission to view system task details",
             "module_id": "tasks"
+        },
+        {
+            "name": "complete_task",
+            "title": "Complete Task",
+            "description": "Permission to complete task",
+            "module_id": "tasks"
+        },
+        {
+            "name": "re_open_task",
+            "title": "Re-Open Task",
+            "description": "Permission to re-open a completed task in-case of any issues.",
+            "module_id": "tasks"
         }
     ],
     "data": []

@@ -14,5 +14,8 @@ Route::middleware('auth:sanctum')
         Route::post('/{urid}/update', [Tasks_Controller::class, 'update']);
         Route::get('/{urid}/view', [Tasks_Controller::class, 'view']);
 
+        Route::post('/{urid}/complete-task', [Tasks_Controller::class, 'complete']);
+        Route::post('/{urid}/re-open-task', [Tasks_Controller::class, 'reOpen']);
+
     })
 ;
