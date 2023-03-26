@@ -4,6 +4,7 @@ namespace Application\Modules\System\Tasks\_Modules\TaskSteps;
 
 use Application\Modules\Core\Status\Status;
 use Application\Modules\System\Tasks\_Modules\Tags\Tags_Model;
+use Application\Modules\System\Tasks\Tasks_Model;
 
 class TaskSteps
 {
@@ -47,4 +48,26 @@ class TaskSteps
         ],
     ];
 
+    private static function relations() {
+        return [
+            'steps' => function ($query) {
+                $query->select(['steps.title']);
+            }
+        ];
+    }
+
+    public static function getRecord($task_urid, $urid) {
+        return TaskSteps_Model
+            ::whereUrid($urid)
+            ->whereTaskId($task_urid)
+            ->first();
+    }
+
+    public static function getTaskStepRecord($task_urid, $urid) {
+        $step = TaskSteps_Model
+            ::whereUrid($urid)
+            ->whereTaskId($task_urid)
+            ->first();
+        return ['urid' => $task_urid, 'step' => $step];
+    }
 }

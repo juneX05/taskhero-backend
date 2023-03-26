@@ -116,7 +116,7 @@ class Tasks_Model extends BaseModel
         return $this->hasMany(
             TaskSteps_Model::class
             , 'task_id'
-            , 'id'
+            , 'urid'
         );
     }
 

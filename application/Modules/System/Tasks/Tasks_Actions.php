@@ -67,7 +67,7 @@ class Tasks_Actions
         try {
             $record = Tasks_Model
                 ::whereUrid($urid)
-                ->with(['priority','project.media','status','assignees','steps','files.media', 'tags'])
+                ->with(['priority','project.media','status','assignees','steps.files','files.media', 'tags'])
                 ->first();
             if (!$record) {
                 return sendError('Record Not found', 404);

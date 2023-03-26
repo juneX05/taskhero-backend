@@ -30,6 +30,18 @@ class Media
         return ['status' => false];
     }
 
+    public static function saveFiles($files) {
+        $file_ids = [];
+        foreach ($files as $file) {
+            $file_result = self::saveFile($file);
+            if ($file_result['status']) $file_ids[] = $file_result['id'];
+
+            return $file_result;
+        }
+
+        return ['status' => true, 'ids' => $file_ids];
+    }
+
     public static function viewFile($urid) {
         $media = Media_Model::whereUrid($urid)->first();
         if (!$media) {
