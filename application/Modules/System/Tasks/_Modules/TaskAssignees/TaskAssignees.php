@@ -2,6 +2,7 @@
 
 namespace Application\Modules\System\Tasks\_Modules\TaskAssignees;
 
+use Application\Modules\Core\Logs\Logs;
 use Application\Modules\Core\Status\Status;
 use Application\Modules\Core\Users\Users_Model;
 use Application\Modules\System\Projects\_Modules\ProjectPositions\ProjectPositions;
@@ -45,22 +46,12 @@ class TaskAssignees
     ];
 
     public static function manageUsers($task, $users) {
-        $old_assigned_users = self::removeOldUsers($task);
+        self::removeOldUsers($task);
 
-        $new_users = self::getNewUsers($users);
-        $users_ids = $new_users['ids'];
+        $users_ids = self::getNewUsers($users);
 
         $result = self::processNewUsers($users_ids, $task->id);
         if(!$result['status']) return $result;
-
-        $new_assigned_users = $new_users['list'];
-        logInfo(__FUNCTION__,[
-            'actor_id' => $task->urid,
-            'actor' => Tasks::class,
-            'action_description' => 'Manage Task Assigned Users',
-            'old_data' => json_encode($old_assigned_users),
-            'new_data' => json_encode($new_assigned_users),
-        ],'MANAGE-ASSIGNED-USERS');
 
         return ['status' => true];
     }
@@ -96,13 +87,8 @@ class TaskAssignees
         $new_users = gettype($users) == 'string'
             ? explode(",",$users)
             : $users;
-        $new_users_query = Users_Model::whereIn('urid', $new_users);
-        $new_assigned_users_ids = $new_users_query->pluck('id');
-
-        return [
-            'ids' => $new_assigned_users_ids,
-            'list' => $new_users_query->pluck('name')
-        ];
+        return Users_Model::whereIn('urid', $new_users)
+            ->pluck('id');
     }
 
 }

@@ -19,14 +19,6 @@ class RolePermissions_Actions
                 return ['status' => false];
             }
 
-            logInfo(__FUNCTION__,[
-                'actor_id' => $item->urid,
-                'actor' => self::$ACTOR,
-                'action_description' => 'Save Role Permission',
-                'old_data' => null,
-                'new_data' => json_encode($item),
-            ],'SAVE-ROLE_PERMISSION');
-
             return ['status' => true, 'data' => $item];
         } catch (Exception $exception) {
             return ['status' => false];

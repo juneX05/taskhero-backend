@@ -17,4 +17,9 @@ class ApplicationExceptionHandler extends Handler
 
         return sendError('Authentication Failed', 401);
     }
+
+    public function render($request, \Throwable $e)
+    {
+        return sendExceptionErrorResponse($e);
+    }
 }

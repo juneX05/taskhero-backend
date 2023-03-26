@@ -31,22 +31,12 @@ class TaskTags
     ];
 
     public static function manageTags($task, $tags) {
-        $old_assigned_tags = self::removeOldTags($task);
+        self::removeOldTags($task);
 
-        $new_tags = self::getNewTags($tags);
-        $tags_ids = $new_tags['ids'];
+        $tags_ids = self::getNewTags($tags);
 
         $result = self::processNewTags($tags_ids, $task->id);
         if(!$result['status']) return $result;
-
-        $new_assigned_tags = $new_tags['list'];
-        logInfo(__FUNCTION__,[
-            'actor_id' => $task->urid,
-            'actor' => Tasks::class,
-            'action_description' => 'Manage Task Assigned Users',
-            'old_data' => json_encode($old_assigned_tags),
-            'new_data' => json_encode($new_assigned_tags),
-        ],'MANAGE-ASSIGNED-USERS');
 
         return ['status' => true];
     }
@@ -82,13 +72,9 @@ class TaskTags
         $new_tags = gettype($tags) == 'string'
             ? explode(",",$tags)
             : $tags;
-        $new_tags_query = Tags_Model::whereIn('urid', $new_tags);
-        $new_assigned_tags_ids = $new_tags_query->pluck('id');
 
-        return [
-            'ids' => $new_assigned_tags_ids,
-            'list' => $new_tags_query->pluck('title')
-        ];
+        return Tags_Model::whereIn('urid', $new_tags)
+            ->pluck('id');
     }
 
 }

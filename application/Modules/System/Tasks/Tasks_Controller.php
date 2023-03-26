@@ -3,6 +3,11 @@
 namespace Application\Modules\System\Tasks;
 
 use Application\Modules\BaseController;
+use Application\Modules\Core\Logs\Logs_Actions;
+use Application\Modules\System\Tasks\Actions\ActionCompleteTask;
+use Application\Modules\System\Tasks\Actions\ActionCreateTask;
+use Application\Modules\System\Tasks\Actions\ActionReOpenTask;
+use Application\Modules\System\Tasks\Actions\ActionUpdateTask;
 use Illuminate\Http\Request;
 
 class Tasks_Controller extends BaseController
@@ -25,7 +30,7 @@ class Tasks_Controller extends BaseController
 
     public function save(Request $request)
     {
-        return Tasks_Actions::saveTask($request->all());
+        return ActionCreateTask::boot($request->all());
     }
 
     public function view($urid)
@@ -35,16 +40,16 @@ class Tasks_Controller extends BaseController
 
     public function update(Request $request, $urid)
     {
-        return Tasks_Actions::updateTask($request->all(), $urid);
+        return ActionUpdateTask::boot($request->all(), $urid);
     }
 
     public function complete(Request $request, $urid)
     {
-        return Tasks_Actions::completeTask($request->all(), $urid);
+        return ActionCompleteTask::boot($request->all(), $urid);
     }
 
     public function reOpen(Request $request, $urid)
     {
-        return Tasks_Actions::reOpenTask($request->all(), $urid);
+        return ActionReOpenTask::boot($request->all(), $urid);
     }
 }

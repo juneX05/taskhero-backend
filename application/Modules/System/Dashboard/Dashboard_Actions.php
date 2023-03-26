@@ -16,7 +16,9 @@ class Dashboard_Actions
         $data['overdue_tasks'] = Tasks_Model::where('end_date','<', date('Y-m-d'))->count();
         $data['projects'] = Projects_Model::all()->count();
         $data['users'] = Users_Model::all()->count();
-        $data['high_priority_tasks'] = Tasks_Model::wherePriorityId(Priorities::HIGH)->count();
+        $data['high_priority_tasks'] = Tasks_Model::whereHas('priority', function ($query) {
+            $query->whereId(Priorities::HIGH);
+        })->count();
 
         return $data;
     }

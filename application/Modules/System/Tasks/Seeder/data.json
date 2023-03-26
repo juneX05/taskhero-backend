@@ -21,6 +21,12 @@
             "module_id": "tasks"
         },
         {
+            "name": "update_task",
+            "title": "Update Task",
+            "description": "Permission to update system task",
+            "module_id": "tasks"
+        },
+        {
             "name": "view_task",
             "title": "View Task",
             "description": "Permission to view system task details",

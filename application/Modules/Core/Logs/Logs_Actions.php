@@ -5,9 +5,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Logs_Actions {
 
-    public static $ACTOR;
-    public static $REQUEST_ID = null;
-
     public static function initiateLog() {
         $data = [];
         $data['request_url'] = request()->url();
@@ -15,7 +12,7 @@ class Logs_Actions {
         $data['request_data'] = json_encode(request()->all());
         $data['request_content_type'] = request()->getContentType();
         $data['request_client_ips'] = json_encode(request()->getClientIps());
-        $data['request_id'] = self::$REQUEST_ID;
+        $data['request_id'] = Logs::$REQUEST_ID;
         if (request()->user()) {
             $data['user'] = Auth::user()->name;
             $data['user_id'] = Auth::user()->id;
@@ -29,14 +26,14 @@ class Logs_Actions {
     }
 
     public static function saveQuickLog($data) {
-        $data['actor'] = self::$ACTOR ?? 'SYSTEM';
+        $data['actor'] = Logs::$ACTOR ?? 'SYSTEM';
 
         self::saveLog($data);
     }
 
     public static function saveLog($data) {
-        self::$REQUEST_ID = self::$REQUEST_ID ??  hrtime(true);
-        $data['request_id'] = self::$REQUEST_ID;
+        Logs::$REQUEST_ID = Logs::$REQUEST_ID ??  hrtime(true);
+        $data['request_id'] = Logs::$REQUEST_ID;
 
         LogInfo_Model::create([
             'request_id' => $data['request_id'],

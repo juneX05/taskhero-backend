@@ -1,6 +1,8 @@
 <?php
 
 use Application\ApplicationBootstrapper;
+use Application\Modules\Core\Logs\Jobs\LogActivity;
+use Application\Modules\Core\Logs\Logs;
 use Application\Modules\Core\Logs\Logs_Actions;
 use Application\Modules\Core\Modules\Modules_Actions;
 use Application\Modules\Core\Modules\Modules_Model;
@@ -22,7 +24,7 @@ function logInfo($tag, $data, $action_type = 'LOG')
     $data['action_name'] = $tag;
 
     if ($action_type == 'LOG') {
-        $data['new_data'] = json_encode($data);
+        $data['new_data'] = ($data);
         $data['action_description'] = null;
         $data['old_data'] = null;
         $data['actor_id'] = null;
@@ -37,17 +39,22 @@ function logInfo($tag, $data, $action_type = 'LOG')
  *
  * @return \Illuminate\Http\JsonResponse
  */
-function sendResponse($message, $result = [], $code = 200)
+function sendResponse($message, $result = [], $callback = null)
 {
     $response = [
         'status' => true,
-        'data' => $result,
         'message' => $message,
     ];
 
     logInfo('RESPONSE', $response);
 
-    return response()->json($response, $code);
+    $response['data'] = $result;
+
+    $request_response = response()->json($response);
+    if ($callback instanceof Closure){
+        return response()->withShutdownTask($request_response, $callback);
+    }
+    return $request_response;
 }
 
 /**
@@ -57,30 +64,60 @@ function sendResponse($message, $result = [], $code = 200)
  */
 function sendError($error, $code)
 {
-    $response = ['status' => false, 'message' => $error];
+    return sendErrorResponse(['type' => $error]);
+}
 
-    if (gettype($error) == "array") {
+/**
+ * @param $errorBag array|string
+ * @return \Illuminate\Http\JsonResponse
+ */
+function sendErrorResponse($errorBag)
+{
+    $request_id = Logs::$REQUEST_ID;
 
-        $response['message'] = 'Validation Failed';
-        $response['data'] = $error['data'];
-        $code = 422;
-
+    if (gettype($errorBag) == 'string') {
+        $message = $errorBag;
+        $type = 'Error';
+        $data = [];
     } else {
-
-        if ($error == 'Forbidden') {
-            $code = 403;
-            $response['message'] = 'You are not allowed to access this resource';
-        }
-
-        if ($error == 'Unauthorized') {
-            $code = 401;
-            $response['message'] = 'You are not authorized';
-        }
-
+        $type = $errorBag['type'] ?? 'Error';
+        $message = $errorBag['error'] ?? '';
+        $data = $errorBag['data'] ?? [];
     }
 
-    $request_id = Logs_Actions::$REQUEST_ID;
-    $response['message'] .= " | REQUEST-ID({$request_id})";
+    switch ($type) {
+        case 'Forbidden' :
+            $code = 403;
+            $message = 'You are not allowed to access this resource';
+            break;
+
+        case 'Unauthorized':
+            $code = 401;
+            $message = 'You are not authorized';
+            break;
+
+        case 'ValidationError':
+            $code = 422;
+            $message = 'Validation Failed';
+            break;
+
+        case 'ExceptionError':
+            $code=500;
+            if (env('APP_ENV') != 'local')
+                $message = 'An Error Occurred. Please contact administrator.';
+            break;
+
+        default:
+            $code = 500;
+    }
+
+    $message .= " | REQUEST-ID({$request_id})";
+
+    $response = [
+        'status' => false,
+        'message' => $message,
+        'data' => $data
+    ];
 
     logInfo('RESPONSE', $response);
 
@@ -88,18 +125,22 @@ function sendError($error, $code)
 }
 
 function sendValidationError($errors) {
-    $response = [
-        'status' => false,
-        'message' => 'Validation Failed',
+    $error = [
+        'type' => 'ValidationError',
         'data' => $errors
     ];
 
-    $request_id = Logs_Actions::$REQUEST_ID;
-    $response['message'] .= " | REQUEST-ID({$request_id})";
+   return sendErrorResponse($error);
+}
 
-    logInfo('RESPONSE', $response);
+function sendExceptionErrorResponse(TypeError|\Throwable $exception) {
+    $error = [
+        'type' => 'ExceptionError',
+        'error' => $exception->getMessage(),
+        'data' => $exception->getTrace()
+    ];
 
-    return response()->json($response, 422);
+   return sendErrorResponse($error);
 }
 
 function seedPermissions($permissions) {
@@ -198,7 +239,7 @@ function validateData($request_data, $rules, $messages = []) {
     $validator = Validator::make($request_data, $rules, $messages);
 
     if ($validator->fails()) {
-        return ['status' => false, 'error' => $validator->errors()];
+        return ['status' => false, 'data' => $validator->errors(), 'type' => 'ValidationError'];
     }
 
     $data = $validator->validated();

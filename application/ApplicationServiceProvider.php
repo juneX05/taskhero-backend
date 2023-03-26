@@ -13,7 +13,6 @@ class ApplicationServiceProvider extends ServiceProvider
     public function boot(Kernel $kernel)
     {
         $kernel->prependMiddlewareToGroup('api', EnsureFrontendRequestsAreStateful::class);
-        $kernel->prependMiddlewareToGroup('api', ForceJsonResponseMiddleware::class);
 //        $kernel->appendToMiddlewarePriority(ApplicationGatesMiddleware::class);
         $kernel->appendMiddlewareToGroup('api',ApplicationGatesMiddleware::class);
 

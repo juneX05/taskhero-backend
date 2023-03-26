@@ -55,8 +55,13 @@ class LogInfo_Model extends BaseModel
     ];
     protected $connection = 'db_log';
 
-    // public function files()
-    // {
-    //     return $this->hasMany(File_Model::class, 'actor_id');
-    // }
+    protected $casts = [
+        'old_data' => 'array',
+        'new_data' => 'array',
+    ];
+
+     public function request()
+     {
+         return $this->belongsTo(Logs_Model::class, 'request_id','request_id');
+     }
 }
