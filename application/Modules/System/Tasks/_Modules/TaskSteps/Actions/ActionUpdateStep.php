@@ -11,14 +11,19 @@ use Application\Modules\System\Tasks\_Modules\TaskTags\TaskTags;
 use Application\Modules\System\Tasks\Tasks;
 use Application\Modules\System\Tasks\Tasks_Model;
 
-class ActionCreateStep
+class ActionUpdateStep
 {
-    public static function boot($request_data, $task_urid) {
+    public static function boot($request_data, $task_urid, $urid) {
         //check user permission
         if (denied('view_task')) return sendErrorResponse('Forbidden');
 
         $task = Tasks::getRecord($task_urid);
         if (!$task) return sendErrorResponse('Task not found');
+
+        $record = TaskSteps::getRecord($task_urid,$urid);
+        if (!$record) return sendErrorResponse('Step not found');
+
+        $old_record = TaskSteps::getTaskStepRecord($task_urid, $record->urid);
 
         //validate request data
         $validation = self::validateData($request_data);
@@ -31,12 +36,10 @@ class ActionCreateStep
 
         $data['task_id'] = $task_urid;
         //save or create new task
-        $result = self::saveStep($data);
-        if (!$result['status']) return sendErrorResponse('Failed to create step.');
+        $result = self::updateStep($data, $record);
+        if (!$result['status']) return sendErrorResponse('Failed to update step.');
 
-        $record = $result['data'];
-
-        //assign users to task
+        //update files
         if (isset($data['files'])) {
             foreach ($data['files'] as $file) {
                 $result = Files::saveFile($file, 'step_id', $record->id);
@@ -47,10 +50,10 @@ class ActionCreateStep
         \DB::commit();
 
         $new_record = TaskSteps::getRecord($task_urid, $record->urid)->toArray();
-        Logs::saveLog('Create Step', 'created', $new_record);
+        Logs::saveLog('Update Step', 'updated', $new_record, $old_record);
 
         //send response back to user
-        return sendResponse('Step Created Successfully');
+        return sendResponse('Step Updated Successfully');
     }
 
     private static function validateData($request_data) {
@@ -61,8 +64,8 @@ class ActionCreateStep
         ]);
     }
 
-    private static function saveStep($data) {
-        $model = TaskSteps_Model::create($data);
+    private static function updateStep($data, $record) {
+        $model = $record->update($data);
 
         if(!$model) {
             return ['status' => false, 'message' => 'Failed to save Step'];

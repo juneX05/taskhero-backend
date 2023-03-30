@@ -4,6 +4,8 @@ namespace Application\Modules\System\Tasks\_Modules\TaskSteps;
 use Application\Modules\BaseController;
 use Application\Modules\Core\Logs\Logs_Actions;
 use Application\Modules\System\Tasks\_Modules\TaskSteps\Actions\ActionCreateStep;
+use Application\Modules\System\Tasks\_Modules\TaskSteps\Actions\ActionRemoveFile;
+use Application\Modules\System\Tasks\_Modules\TaskSteps\Actions\ActionUpdateStep;
 use Application\Modules\System\Tasks\Actions\ActionCompleteTask;
 use Application\Modules\System\Tasks\Actions\ActionCreateTask;
 use Application\Modules\System\Tasks\Actions\ActionReOpenTask;
@@ -18,14 +20,9 @@ class TaskSteps_Controller extends BaseController
         return ActionCreateStep::boot($request->all(), $task_urid);
     }
 
-    public function view($urid)
+    public function update(Request $request, $task_urid, $urid)
     {
-        return Tasks_Actions::viewTask($urid);
-    }
-
-    public function update(Request $request, $urid)
-    {
-        return ActionUpdateTask::boot($request->all(), $urid);
+        return ActionUpdateStep::boot($request->all(), $task_urid, $urid);
     }
 
     public function complete(Request $request, $urid)
@@ -33,8 +30,8 @@ class TaskSteps_Controller extends BaseController
         return ActionCompleteTask::boot($request->all(), $urid);
     }
 
-    public function reOpen(Request $request, $urid)
+    public function removeFiles(Request $request, $task_urid, $urid)
     {
-        return ActionReOpenTask::boot($request->all(), $urid);
+        return ActionRemoveFile::boot($request->all(), $task_urid, $urid);
     }
 }

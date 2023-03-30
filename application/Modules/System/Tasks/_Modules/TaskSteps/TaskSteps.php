@@ -59,15 +59,17 @@ class TaskSteps
     public static function getRecord($task_urid, $urid) {
         return TaskSteps_Model
             ::whereUrid($urid)
+            ->with('files')
             ->whereTaskId($task_urid)
             ->first();
     }
 
     public static function getTaskStepRecord($task_urid, $urid) {
         $step = TaskSteps_Model
-            ::whereUrid($urid)
+            ::with(['files' => function ($query) { $query->pluck('original_name'); }])
+            ->whereUrid($urid)
             ->whereTaskId($task_urid)
             ->first();
-        return ['urid' => $task_urid, 'step' => $step];
+        return ['urid' => $task_urid, 'step' => $step->toArray()];
     }
 }

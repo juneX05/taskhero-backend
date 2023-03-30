@@ -11,14 +11,19 @@ use Application\Modules\System\Tasks\_Modules\TaskTags\TaskTags;
 use Application\Modules\System\Tasks\Tasks;
 use Application\Modules\System\Tasks\Tasks_Model;
 
-class ActionCreateStep
+class ActionRemoveFile
 {
-    public static function boot($request_data, $task_urid) {
+    public static function boot($request_data, $task_urid, $urid) {
         //check user permission
         if (denied('view_task')) return sendErrorResponse('Forbidden');
 
         $task = Tasks::getRecord($task_urid);
         if (!$task) return sendErrorResponse('Task not found');
+
+        $record = TaskSteps::getRecord($task_urid,$urid);
+        if (!$record) return sendErrorResponse('Step not found');
+
+        $old_record = TaskSteps::getTaskStepRecord($task_urid, $record->urid);
 
         //validate request data
         $validation = self::validateData($request_data);
@@ -31,38 +36,37 @@ class ActionCreateStep
 
         $data['task_id'] = $task_urid;
         //save or create new task
-        $result = self::saveStep($data);
-        if (!$result['status']) return sendErrorResponse('Failed to create step.');
+        $result = self::updateStep($data, $record);
+        if (!$result['status']) return sendErrorResponse('Failed to update step.');
 
-        $record = $result['data'];
-
-        //assign users to task
-        if (isset($data['files'])) {
-            foreach ($data['files'] as $file) {
-                $result = Files::saveFile($file, 'step_id', $record->id);
+        //update files
+        $removed_files = [];
+        if (isset($data['removeFiles'])) {
+            foreach ($data['removeFiles'] as $media_urid) {
+                $result = Files::removeFile($media_urid, 'step_id', $record->id);
                 if (!$result['status']) return sendErrorResponse($result['error']);
+
+                $removed_files[] = $result['file'];
             }
         }
 
         \DB::commit();
 
         $new_record = TaskSteps::getRecord($task_urid, $record->urid)->toArray();
-        Logs::saveLog('Create Step', 'created', $new_record);
+        Logs::saveLog('Remove Files', 'deleted', $new_record, $old_record);
 
         //send response back to user
-        return sendResponse('Step Created Successfully');
+        return sendResponse('Step Updated Successfully');
     }
 
     private static function validateData($request_data) {
         return validateData($request_data,[
-            'title' => ['required', ],
-            'description' => ['required'],
-            'files' => ['nullable'],
+            'removeFiles' => ['required','array'],
         ]);
     }
 
-    private static function saveStep($data) {
-        $model = TaskSteps_Model::create($data);
+    private static function updateStep($data, $record) {
+        $model = $record->update($data);
 
         if(!$model) {
             return ['status' => false, 'message' => 'Failed to save Step'];

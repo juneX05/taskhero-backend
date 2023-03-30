@@ -34,6 +34,23 @@ class Files
         return ['status' => true];
     }
 
+    public static function removeFile($media_urid, $column, $id) {
+
+        $file_result = Files_Model::with('media')->whereHas('media', function ($query) use($media_urid) {
+            $query->whereUrid($media_urid);
+        })->where('step_id',$id)->first();
+        $old_file = $file_result->toArray();
+
+        $deleted = $file_result->delete();
+        if (!$deleted) {
+            $message = 'Failed to remove File ->' . $old_file['media']['original_name'];
+            \Log::info($message);
+            return ['status' => false, 'error' => $message];
+        }
+
+        return ['status' => true, 'file' => $old_file['media']['original_name']];
+    }
+
 //    public static function saveFiles($data) {
 //        foreach ($data as $file) {
 //            $result = self::saveFile($file);
