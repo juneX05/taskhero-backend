@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|TaskAssignees_Model whereUserId($value)
  * @property int $status_id
  * @method static \Illuminate\Database\Eloquent\Builder|TaskAssignees_Model whereStatusId($value)
+ * @property-read Users_Model|null $user
  * @mixin \Eloquent
  */
 class TaskAssignees_Model extends BaseModel

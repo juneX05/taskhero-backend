@@ -34,11 +34,11 @@ class Logs
         return $data;
     }
 
-    public static function saveLog($action, $action_type, $new_record, $old_record = [], $description = '') {
+    public static function saveLog($actor, $action, $action_type, $new_record, $old_record = [], $description = '') {
 
         LogInfo_Model::create([
             'request_id' => self::$REQUEST_ID,
-            'actor' => self::$ACTOR,
+            'actor' => $actor,
             'actor_id' => $new_record['urid'],
             'action_type' => $action_type,
             'action_name' => $action,

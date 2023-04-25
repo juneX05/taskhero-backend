@@ -16,7 +16,7 @@ Route::middleware('auth:sanctum')
         Route::get('/{module_id}/view', 'view');
 
         Route::post('/seed', function (\Illuminate\Http\Request $request) {
-            \Application\Modules\Core\Modules\Modules::runSeeder($request['class']);
+            \Application\Modules\Core\Modules\Modules::runSeeder($request['module']);
         });
 
     })

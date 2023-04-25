@@ -17,9 +17,9 @@ use Application\Modules\System\Projects\_Modules\ProjectCategories\ProjectCatego
  * @property int $id
  * @property string $title
  * @property string $description
- * @property string $media_id
  * @property int $priority_id
- * @property int $project_category_id
+ * @property int|null $media_id
+ * @property int|null $project_category_id
  * @property string|null $start_date
  * @property string|null $end_date
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -63,7 +63,7 @@ class Projects_Model extends BaseModel {
         return $this->belongsTo(
             ProjectCategories_Model::class
             , 'project_category_id'
-            , 'id'
+            , 'urid'
             , 'category'
         );
     }
@@ -72,7 +72,7 @@ class Projects_Model extends BaseModel {
         return $this->belongsTo(
             Priorities_Model::class
             , 'priority_id'
-            , 'id'
+            , 'urid'
             , 'priority'
         );
     }
@@ -92,7 +92,7 @@ class Projects_Model extends BaseModel {
         return $this->belongsTo(
             Media_Model::class
             , 'media_id'
-            , 'id'
+            , 'urid'
             , 'media');
     }
 }

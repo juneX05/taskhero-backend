@@ -23,7 +23,7 @@ class Media
         if ($save) {
             return [
                 'status' => true,
-                'id' => $fileModel->id
+                'id' => $fileModel->urid
             ];
         }
 

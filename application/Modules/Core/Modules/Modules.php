@@ -2,6 +2,8 @@
 
 namespace Application\Modules\Core\Modules;
 
+use Application\Modules\SystemSeeder;
+
 class Modules
 {
     public static function runMigration() {
@@ -10,12 +12,9 @@ class Modules
         }
     }
 
-    public static function runSeeder($class) {
-        echo "php artisan db:seed --class=$class";
-        echo getcwd();
+    public static function runSeeder($module) {
         if (\Auth::id() == 1) {
-            exec("php ../artisan db:seed --class=$class", $output);
-            echo json_encode($output);
+            SystemSeeder::seedModule($module);
         }
     }
 }

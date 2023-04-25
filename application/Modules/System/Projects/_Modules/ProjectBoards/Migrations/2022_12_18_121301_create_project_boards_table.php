@@ -1,14 +1,14 @@
 <?php
 
 use Application\ApplicationBootstrapper;
-use Application\Modules\System\Projects\Projects;
+use Application\Modules\System\Projects\_Modules\ProjectBoards\ProjectBoards;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    private $table = Projects::TABLE;
+    private $table = ProjectBoards::TABLE;
     /**
      * Run the migrations.
      *
@@ -16,7 +16,7 @@ return new class extends Migration
      */
     public function up()
     {
-        $columns = Projects::COLUMNS;
+        $columns = ProjectBoards::COLUMNS;
         Schema::create($this->table, function (Blueprint $table) use ($columns) {
 
             foreach ($columns as $column) {

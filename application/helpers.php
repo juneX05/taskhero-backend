@@ -11,9 +11,6 @@ use Application\Modules\Core\Permissions\Permissions_Model;
 use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
 use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
 use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -264,3 +261,17 @@ function verifyRequest() {
     return false;
 }
 
+function error($error) {
+    return [
+        'status' => false,
+        'error' => $error
+    ];
+}
+
+function success($message = 'success', $data = []) {
+    return [
+        'status' => true,
+        'message' => $message,
+        'data' => $data,
+    ];
+}

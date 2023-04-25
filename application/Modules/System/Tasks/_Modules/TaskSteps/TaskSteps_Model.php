@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|TaskSteps_Model whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TaskSteps_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TaskSteps_Model whereUrid($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Media_Model> $files
+ * @property-read int|null $files_count
  * @mixin \Eloquent
  */
 class TaskSteps_Model extends BaseModel

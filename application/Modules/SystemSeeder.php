@@ -56,7 +56,7 @@ class SystemSeeder extends Seeder
                     'directory' => $module_directory . "/_Modules" . DIRECTORY_SEPARATOR,
                     'namespace' => str_replace('\\\\','\\',$parent['namespace'] . "\\{$module}\_Modules")
                 ];
-        
+
                 $directories = File::directories($module_directory. "/_Modules");
 
                 $seeders = array_merge_recursive($seeders ?? [], $this->loadSeeders($module_parent, $directories));
@@ -70,5 +70,20 @@ class SystemSeeder extends Seeder
     function getModuleName($replace_key, $path) {
         return str_replace($replace_key, '',$path);
 
+    }
+
+    public static function seedModule($module) {
+        $core_module_directory = modules_path() . "/Core/$module";
+        $system_module_directory = modules_path() . "/System/$module";
+
+        echo $core_module_directory . "\n";
+        echo $system_module_directory . "\n";
+
+        if (file_exists("{$core_module_directory}/Seeder/{$module}_Seeder.php"))
+            (new SystemSeeder)->call("Application\Modules\Core\\{$module}\Seeder\\{$module}_Seeder.php");
+        elseif(file_exists("{$system_module_directory}/Seeder/{$module}_Seeder.php"))
+            (new SystemSeeder)->call("Application\Modules\System\\{$module}\Seeder\\{$module}_Seeder");
+        else
+            echo "FAILED TO SEED MODULE $module";
     }
 }

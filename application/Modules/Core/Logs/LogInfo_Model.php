@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|LogInfo_Model whereRequestId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LogInfo_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LogInfo_Model whereUrid($value)
+ * @property-read \Application\Modules\Core\Logs\Logs_Model|null $request
  * @mixin \Eloquent
  */
 class LogInfo_Model extends BaseModel

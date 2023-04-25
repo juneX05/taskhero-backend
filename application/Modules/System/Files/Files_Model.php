@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|Files_Model whereTaskId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Files_Model whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Files_Model whereUrid($value)
+ * @property-read Media_Model|null $media
  * @mixin \Eloquent
  */
 class Files_Model extends BaseModel

@@ -21,21 +21,15 @@
             "module_id": "projects"
         },
         {
-            "name": "view_project",
+            "name": "view_project_details",
             "title": "View Project Details",
             "description": "Permission to view system project details",
             "module_id": "projects"
         },
         {
-            "name": "activate_project",
-            "title": "Activate Project",
-            "description": "Permission to activate project",
-            "module_id": "projects"
-        },
-        {
-            "name": "suspend_project",
-            "title": "Suspend Project",
-            "description": "Permission to suspend project",
+            "name": "update_project",
+            "title": "Update Project Details",
+            "description": "Permission to update project details",
             "module_id": "projects"
         }
     ],
