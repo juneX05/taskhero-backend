@@ -13,35 +13,42 @@ class Menus_Controller extends BaseController
 
     public function index()
     {
-        return Menus_Actions::index();
+        $result = Menus_Actions::index();
+        return sendResponse($result);
     }
 
     public function parents()
     {
-        return Menus_Actions::getParentMenus();
+        $result = Menus_Actions::getParentMenus();
+        return sendResponse($result);
     }
 
     public function menuRoutes()
     {
-        return Menus_Actions::getMenuRoutes();
+        $result = Menus_Actions::getMenuRoutes();
+        return sendResponse($result);
     }
 
     /**
      * @throws \Illuminate\Validation\ValidationException
      */
     public function save(Request $request) {
-        return Menus_Actions::saveMenu($request->all());
+        $result = Menus_Actions::saveMenu($request->all());
+        return sendResponse($result);
     }
 
     public function update(Request $request) {
-        return Menus_Actions::updateMenu($request->all());
+        $result = Menus_Actions::updateMenu($request->all());
+        return sendResponse($result);
     }
 
     public function delete(Request $request) {
-        return Menus_Actions::deleteMenu($request->all());
+        $result = Menus_Actions::deleteMenu($request->all());
+        return sendResponse($result);
     }
 
     public function updatePositions(Request $request) {
-        return Menus_Actions::updatePositions($request->all() );
+        $result = Menus_Actions::updatePositions($request->all() );
+        return sendResponse($result);
     }
 }

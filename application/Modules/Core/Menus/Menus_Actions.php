@@ -15,7 +15,7 @@ class Menus_Actions
     private static $ACTOR = 'Menus';
 
     public static function index() {
-//        if (denied('manage_menus')) return sendError('Forbidden', 403);
+//        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try {
             $data = \DB::table('menus', 'm')
@@ -25,9 +25,9 @@ class Menus_Actions
                 ->where(['m.status_id' => 1])
                 ->get(['m.*', 'me.title as parent_menu', 'permissions.title as permission']);
 
-            return sendResponse('Success', $data);
+            return success('Success', $data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -82,7 +82,7 @@ class Menus_Actions
     }
 
     public static function saveMenu($data) {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try {
             $validation = self::validate($data);
@@ -92,14 +92,14 @@ class Menus_Actions
             $item = Menus_Model::create($data);
 
             if (!$item) {
-                return sendError('Failed to save menu', 500);
+                return error('Failed to save menu', 500);
             }
 
             $item->position = $item->id;
             $saved = $item->save();
 
             if (!$saved) {
-                return sendError('Failed to set position', 500);
+                return error('Failed to set position', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -110,14 +110,14 @@ class Menus_Actions
                 'new_data' => json_encode($item),
             ],'SAVE-MENU');
 
-            return sendResponse('Menu saved Successfully', $item);
+            return success('Menu saved Successfully', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function getParentMenus() {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try{
             $data = Menus_Model
@@ -126,10 +126,10 @@ class Menus_Actions
                 ->whereStatusId(1)
                 ->get();
 
-            return sendResponse('Success', $data);
+            return success('Success', $data);
         }
         catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -145,10 +145,10 @@ class Menus_Actions
         try{
             $data = self::sidebarMenus();
 
-            return sendResponse('Success', $data);
+            return success('Success', $data);
         }
         catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -159,19 +159,19 @@ class Menus_Actions
                 ->whereStatusId(1)
                 ->get();
 
-            return sendResponse('Success', $data);
+            return success('Success', $data);
         }
         catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updateMenu($data) {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try {
             $record = Menus_Model::whereUrid($data['urid'])->first();
-            if (!$record) return sendError('Record not found', 404);
+            if (!$record) return error('Record not found', 404);
 
             $validation = self::validate($data, $record);
             if(!$validation['status']) return sendValidationError($validation['error']);
@@ -182,7 +182,7 @@ class Menus_Actions
 
             $updated = $record->update($data);
 
-            if (!$updated) return sendError('Failed to update record', 500);
+            if (!$updated) return error('Failed to update record', 500);
 
             logInfo(__FUNCTION__,[
                 'actor_id' => $record->urid,
@@ -192,18 +192,18 @@ class Menus_Actions
                 'new_data' => json_encode($record),
             ],'UPDATE-MENU');
 
-            return sendResponse('Success', $data);
+            return success('Success', $data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function deleteMenu($data) {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try {
             $model = Menus_Model::whereUrid($data['urid'])->first();
-            if (!$model) return sendError('Record Not Found', 404);
+            if (!$model) return error('Record Not Found', 404);
 
             $old_data = $model->toArray();
 
@@ -211,7 +211,7 @@ class Menus_Actions
                 'status_id' => 2
             ]);
 
-            if (!$updated) return sendError('Failed to delete record', 500);
+            if (!$updated) return error('Failed to delete record', 500);
 
             logInfo(__FUNCTION__,[
                 'actor_id' => $model->urid,
@@ -221,21 +221,21 @@ class Menus_Actions
                 'new_data' => json_encode($model),
             ],'DELETE-MENU');
 
-            return sendResponse('Success', $model);
+            return success('Success', $model);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updatePositions($data) {
-        if (denied('manage_menus')) return sendError('Forbidden', 403);
+        if (denied('manage_menus')) return error('Forbidden', 403);
 
         try {
             $model = Menus_Model
                 ::whereUrid($data['urid'])
                 ->first();
 
-            if (!$model) return sendError('Menu Not found', 404);
+            if (!$model) return error('Menu Not found', 404);
 
             $validation = self::validateUpdatePositions($data);
             if(!$validation['status']) return sendValidationError($validation['error']);
@@ -247,7 +247,7 @@ class Menus_Actions
                 ->first();
 
             if (!$referred_after_menu)
-                return sendError('Menu Not found', 404);
+                return error('Menu Not found', 404);
 
             $menus = Menus_Model::all();
             foreach ($menus as $menu) {
@@ -256,13 +256,13 @@ class Menus_Actions
 
                     $update = $referred_menu->update(['position' => $menu->position + 1]);
                     if (!$update)
-                        return sendError('Failed to update position in menu ' . json_encode($referred_menu->toArray()), 500);
+                        return error('Failed to update position in menu ' . json_encode($referred_menu->toArray()), 500);
                 }
             }
 
             $update = $model->update(['position' => $referred_after_menu->position + 1]);
             if (!$update)
-                return sendError('Failed to update position in menu ' . json_encode($model->toArray()), 500);
+                return error('Failed to update position in menu ' . json_encode($model->toArray()), 500);
 
             $new_menus = Menus_Model::all();
 
@@ -274,9 +274,9 @@ class Menus_Actions
                 'new_data' => json_encode($new_menus),
             ],'UPDATE-MENU_POSITIONS');
 
-            return sendResponse('Success', $model);
+            return success('Success', $model);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 }
