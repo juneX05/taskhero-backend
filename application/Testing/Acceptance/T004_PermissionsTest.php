@@ -30,7 +30,7 @@ class T004_PermissionsTest extends BaseTest
 
     }
 
-    public function viewData()
+    public function test_view_all_permissions()
     {
         $response = $this->sendAuthorizedRequest('/api/permissions', 'GET');
         $response->assertStatus(200);
@@ -44,6 +44,8 @@ class T004_PermissionsTest extends BaseTest
 
     public function test_updating_permission()
     {
+        $this->test_creating_new_permission();
+
         $new_data = Permissions_Model::whereName('new_permission')
             ->first()->toArray();
 

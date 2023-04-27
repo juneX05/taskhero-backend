@@ -12,14 +12,17 @@ class Permissions_Controller extends BaseController
 {
 
     public function index(){
-        return Permissions_Actions::index();
+        $result = Permissions_Actions::index();
+        return sendResponse($result);
     }
 
     public function save(Request $request) {
-        return Permissions_Actions::savePermission($request->all());
+        $result = Permissions_Actions::savePermission($request->all());
+        return sendResponse($result);
     }
 
     public function update(Request $request) {
-        return Permissions_Actions::updatePermission($request->all());
+        $result = Permissions_Actions::updatePermission($request->all());
+        return sendResponse($result);
     }
 }

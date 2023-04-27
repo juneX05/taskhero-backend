@@ -13,13 +13,15 @@ class Dashboard_Controller extends BaseController
     {
         switch (Auth::user()->user_type_id) {
             case UserTypes::ADMIN_ID:
-                return Dashboard_Actions::dashboard_admin();
-
+                $result = Dashboard_Actions::dashboard_admin();
+                break;
             case UserTypes::DEVELOPER_ID:
-                return Dashboard_Actions::dashboard_developer();
-
+                $result =  Dashboard_Actions::dashboard_developer();
+                break;
             default:
-                return sendResponse('Dashboard Success', []);
+                $result =  ['status' => true, 'message' => "Success"];
         }
+
+        return sendResponse($result);
     }
 }

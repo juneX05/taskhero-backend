@@ -10,7 +10,8 @@ class T003_ModulesTest extends BaseTest
             "name": "new_module",
             "title": "New Module",
             "description": "This is the new module",
-            "status_id": "1"
+            "status_id": "1",
+            "module_type_id": "1"
     }
     JSON;
 

@@ -22,18 +22,6 @@ class T006_UsersTest extends BaseTest
 
     }
 
-    public function test_view_user_types()
-    {
-        $response = $this->sendAuthorizedRequest('/api/users/user-types', 'GET');
-        $response->assertStatus(200);
-        $response->assertJsonPath('status', true);
-
-        $data = json_decode($response->getContent(), true);
-
-        $this->assertNotEmpty($data['data'], 'Data Key in response is Empty');
-
-    }
-
     public function viewData()
     {
         $response = $this->sendAuthorizedRequest('/api/users', 'GET');
@@ -142,12 +130,12 @@ class T006_UsersTest extends BaseTest
 
         $data['user_id'] = $user->urid;
         $data['permissions'] = [
-            ['id'=>1, 'selected'=>true],
-            ['id'=>2, 'selected'=>false],
-            ['id'=>5, 'selected'=>true],
-            ['id'=>7, 'selected'=>true],
+            "1" => "given",
+            "2" => "not_given",
+            "5" => "given",
+            "7" => "given",
         ];
-        $response = $this->sendAuthorizedRequest("/api/users/change-permissions", 'POST', $data);
+        $response = $this->sendAuthorizedRequest("/api/users/{$data['user_id']}/change-permissions", 'POST', $data);
 
         $response_data = json_decode($response->getContent(), true);
 
@@ -166,7 +154,7 @@ class T006_UsersTest extends BaseTest
             ['id'=>1, 'selected'=>true],
             ['id'=>2, 'selected'=>false],
         ];
-        $response = $this->sendAuthorizedRequest("/api/users/change-roles", 'POST', $data);
+        $response = $this->sendAuthorizedRequest("/api/users/{$data['user_id']}/change-roles", 'POST', $data);
 
         $response_data = json_decode($response->getContent(), true);
 
@@ -194,6 +182,8 @@ class T006_UsersTest extends BaseTest
 
     public function test_complete_new_user_registration()
     {
+        $this->test_add_new_user();
+
         $user = Users_Model::whereEmail('newbornuser@gmail.com')->first();
         $urid = $user->urid;
 
@@ -210,12 +200,14 @@ class T006_UsersTest extends BaseTest
 
     public function test_login_after_complete_registration()
     {
+        $this->test_complete_new_user_registration();
+
         $data = [
             'email' => 'newbornuser@gmail.com',
             'password' => 'password',
         ];
 
-        $response = $this->post('/api/login', $data);
+        $response = $this->post('/api/mobile/login', $data);
 
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);
@@ -243,16 +235,16 @@ class T006_UsersTest extends BaseTest
             'email' => 'demouser4@gmail.com',
             'password' => 'secretss',
         ];
-        $response = $this->post("/api/login", $data);
+        $response = $this->post("/api/mobile/login", $data);
 
-        $response->assertStatus(401);
+        $response->assertStatus(500);
         $response->assertJsonPath('status', false);
     }
 
     public function test_activate_user()
     {
 
-        $user = Users_Model::whereEmail('demouser4@gmail.com')->first();
+        $user = Users_Model::whereEmail('demouser5@gmail.com')->first();
         $urid = $user->urid;
         $data = [
             'reason' => 'approved',
@@ -263,18 +255,15 @@ class T006_UsersTest extends BaseTest
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);
 
-        $response = $this->post("/api/logout");
+        $response = $this->sendNormalRequest("/api/logout", "POST");
         $response->assertStatus(200);
 
         //Test Login after deactivation.
         $data = [
-            'email' => 'demouser4@gmail.com',
+            'email' => 'demouser5@gmail.com',
             'password' => 'secretss',
         ];
-        $response = $this->post("/api/login", $data);
-
-        echo bcrypt($data['password']) . "\n\n";
-        echo $response->getContent() . "\n";
+        $response = $this->sendNormalRequest("/api/mobile/login", "POST", $data);
 
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);

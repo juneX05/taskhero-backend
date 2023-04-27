@@ -121,6 +121,13 @@
             "password": "secretss",
             "user_status_id": 1,
             "user_type_id": 2
+        },
+        {
+            "name": "Demo User 5",
+            "email": "demouser5@gmail.com",
+            "password": "secretss",
+            "user_status_id": 2,
+            "user_type_id": 2
         }
     ]
 }

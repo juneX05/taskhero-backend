@@ -13,42 +13,51 @@ class Roles_Controller extends BaseController
 
     public function index()
     {
-        return Roles_Actions::index();
+        $result = Roles_Actions::index();
+        return sendResponse($result);
     }
 
     public function view($urid)
     {
-        return Roles_Actions::viewRole($urid);
+        $result = Roles_Actions::viewRole($urid);
+        return sendResponse($result);
     }
 
     public function save(Request $request)
     {
-        return Roles_Actions::saveRole($request->all());
+        $result = Roles_Actions::saveRole($request->all());
+        return sendResponse($result);
     }
 
     public function update(Request $request, $urid)
     {
-        return Roles_Actions::updateRole($request->all(), $urid);
+        $result = Roles_Actions::updateRole($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function changePermissions(Request $request, $urid) {
-        return Roles_Actions::changeRolePermissions($request->all(), $urid);
+        $result = Roles_Actions::changeRolePermissions($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function getRoleStatuses() {
-        return Roles_Actions::getRoleStatuses();
+        $result = Roles_Actions::getRoleStatuses();
+        return sendResponse($result);
     }
 
     public function activate(Request $request,$urid) {
-        return Roles_Actions::activateRole($request->all(), $urid);
+        $result = Roles_Actions::activateRole($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function deactivate(Request $request,$urid) {
-        return Roles_Actions::deactivateRole($request->all(), $urid);
+        $result = Roles_Actions::deactivateRole($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function getPermissions($urid) {
-        return Roles_Actions::getRolePermissions($urid);
+        $result = Roles_Actions::getRolePermissions($urid);
+        return sendResponse($result);
     }
 
 }

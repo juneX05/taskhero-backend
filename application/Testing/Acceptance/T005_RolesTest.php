@@ -65,6 +65,8 @@ class T005_RolesTest extends BaseTest
 
     public function test_updating_role()
     {
+        $this->test_creating_new_role();
+
         $new_data = Roles_Model::whereName('new_role')
             ->first()->toArray();
 
@@ -88,10 +90,10 @@ class T005_RolesTest extends BaseTest
             ->first()->toArray();
 
         $data['permissions'] = [
-            ['id'=>1, 'selected'=>true],
-            ['id'=>2, 'selected'=>false],
-            ['id'=>5, 'selected'=>true],
-            ['id'=>7, 'selected'=>true],
+            "1" => "given",
+            "2" => "not_given",
+            "5" => "given",
+            "7" => "given",
         ];
         $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/change-permissions", 'POST', $data);
         $response_data = json_decode($response->getContent(), true);
@@ -102,13 +104,29 @@ class T005_RolesTest extends BaseTest
         $this->assertIsArray($response_data, 'Data is not array.');
     }
 
-    public function test_change_role_status()
+    public function test_deactivate_role()
     {
         $record_data = Roles_Model::whereName('super_admin')
             ->first()->toArray();
 
-        $data['status_id'] = 1;
-        $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/change-status", 'POST', $data);
+        $data['reason'] = "Just deactivate";
+        $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/deactivate", 'POST', $data);
+
+        $response_data = json_decode($response->getContent(), true);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
+
+        $this->assertIsArray($response_data, 'Data is not array.');
+    }
+
+    public function test_activate_role()
+    {
+        $record_data = Roles_Model::whereName('super_admin')
+            ->first()->toArray();
+
+        $data['reason'] = "Just activate";
+        $response = $this->sendAuthorizedRequest("/api/roles/${record_data['urid']}/activate", 'POST', $data);
 
         $response_data = json_decode($response->getContent(), true);
 

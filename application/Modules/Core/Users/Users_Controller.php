@@ -10,63 +10,78 @@ use Illuminate\Support\Facades\Validator;
 class Users_Controller extends BaseController {
 
     public function index() {
-        return Users_Actions::index();
+        $result = Users_Actions::index();
+        return sendResponse($result);
     }
 
     public function view($urid) {
-        return Users_Actions::viewUser($urid);
+        $result = Users_Actions::viewUser($urid);
+        return sendResponse($result);
     }
 
     public function splash() {
-        return Users_Actions::splash();
+        $result = Users_Actions::splash();
+        return sendResponse($result);
     }
 
     public function changeUserPassword(Request $request) {
-        return Users_Actions::changeUserPassword($request->all());
+        $result = Users_Actions::changeUserPassword($request->all());
+        return sendResponse($result);
     }
 
     public function changePassword(Request $request) {
-        return Users_Actions::changePassword($request->all());
+        $result = Users_Actions::changePassword($request->all());
+        return sendResponse($result);
     }
 
     public function changePermissions(Request $request, $urid) {
-        return Users_Actions::changeUserPermissions($request->all(), $urid);
+        $result = Users_Actions::changeUserPermissions($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function getPermissions($urid) {
-        return Users_Actions::getUserPermissions( $urid);
+        $result = Users_Actions::getUserPermissions( $urid);
+        return sendResponse($result);
     }
 
     public function changeRoles(Request $request, $urid) {
-        return Users_Actions::changeUserRoles($request->all(), $urid);
+        $result = Users_Actions::changeUserRoles($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function save(Request $request) {
-        return Users_Actions::saveUser($request->all());
+        $result = Users_Actions::saveUser($request->all());
+        return sendResponse($result);
     }
 
     public function profile() {
-        return Users_Actions::getUserProfile();
+        $result = Users_Actions::getUserProfile();
+        return sendResponse($result);
     }
 
     public function profileUpdate(Request $request) {
-        return Users_Actions::updateUserProfile($request->all());
+        $result = Users_Actions::updateUserProfile($request->all());
+        return sendResponse($result);
     }
 
     public function updateAccountDetails(Request $request, $urid) {
-        return Users_Actions::updateUserAccountDetails($request->all(), $urid);
+        $result = Users_Actions::updateUserAccountDetails($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function completeRegistration($urid) {
-        return Users_Actions::completeUserRegistration($urid);
+        $result = Users_Actions::completeUserRegistration($urid);
+        return sendResponse($result);
     }
 
     public function deactivate(Request $request, $urid) {
-        return Users_Actions::deactivateUser($request->all(), $urid);
+        $result = Users_Actions::deactivateUser($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function activate(Request $request, $urid) {
-        return Users_Actions::activateUser($request->all(), $urid);
+        $result = Users_Actions::activateUser($request->all(), $urid);
+        return sendResponse($result);
     }
 
 }

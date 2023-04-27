@@ -14,28 +14,34 @@ class Modules_Controller extends BaseController
 
     public function index()
     {
-        return Modules_Actions::index();
+        $result = Modules_Actions::index();
+        return sendResponse($result);
     }
 
     public function view($module_id)
     {
-        return Modules_Actions::viewModule($module_id);
+        $result = Modules_Actions::viewModule($module_id);
+        return sendResponse($result);
     }
 
     public function statuses()
     {
-        return Modules_Actions::getModuleStatuses();
+        $result = Modules_Actions::getModuleStatuses();
+        return sendResponse($result);
     }
 
     public function save(Request $request) {
-       return Modules_Actions::saveModule($request->all());
+       $result = Modules_Actions::saveModule($request->all());
+        return sendResponse($result);
     }
 
     public function update(Request $request) {
-        return Modules_Actions::updateModule($request->all());
+        $result = Modules_Actions::updateModule($request->all());
+        return sendResponse($result);
     }
 
     public function changeStatus(Request $request) {
-        return Modules_Actions::changeModuleStatus($request->all());
+        $result = Modules_Actions::changeModuleStatus($request->all());
+        return sendResponse($result);
     }
 }

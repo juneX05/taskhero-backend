@@ -43,6 +43,7 @@ class Modules_Model extends BaseModel {
         'title',
         'description',
         'status_id',
-        'urid'
+        'urid',
+        "module_type_id"
     ];
 }

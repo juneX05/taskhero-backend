@@ -15,7 +15,7 @@ class Modules_Actions
     private static $ACTOR = 'Modules';
 
     public static function index() {
-        if (denied('view_modules')) return sendError('Forbidden', 403);
+        if (denied('view_modules')) return error('Forbidden', 403);
         try {
             $all_data = Modules_Model
                 ::join('status', 'status.id','modules.status_id')
@@ -23,14 +23,14 @@ class Modules_Actions
                 ->get();
 
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function viewModule($urid) {
-        if (denied('view_module')) return sendError('Forbidden', 403);
+        if (denied('view_module')) return error('Forbidden', 403);
         try {
             $item = Modules_Model
                 ::join('status', 'status.id','modules.status_id')
@@ -47,21 +47,21 @@ class Modules_Actions
             $all_data['module'] = $item;
             $all_data['permissions'] = $permissions;
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function getModuleStatuses() {
-        if (denied('view_modules')) return sendError('Forbidden', 403);
+        if (denied('view_modules')) return error('Forbidden', 403);
 
         try {
             $item = Status_Model::all();
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -70,6 +70,7 @@ class Modules_Actions
             'name' => ['required', 'string'],
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
+            'module_type_id' => ['required', 'string'],
         ];
 
         if ($record == null) {
@@ -91,7 +92,7 @@ class Modules_Actions
     }
 
     public static function saveModule($request_data) {
-        if (denied('save_module')) return sendError('Forbidden', 403);
+        if (denied('save_module')) return error('Forbidden', 403);
 
         try {
             $validation = self::validate($request_data);
@@ -103,7 +104,7 @@ class Modules_Actions
             $item = Modules_Model::create($data);
 
             if (!$item) {
-                return sendError('Failed to save module', 500);
+                return error('Failed to save module', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -114,18 +115,18 @@ class Modules_Actions
                 'new_data' => json_encode($item),
             ],'SAVE-MODULE');
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updateModule($request_data) {
-        if (denied('update_module')) return sendError('Forbidden', 403);
+        if (denied('update_module')) return error('Forbidden', 403);
         try {
             $record = Modules_Model::whereUrid($request_data['urid'])->first();
             if (!$record) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             $validation = self::validate($request_data, $record);
@@ -138,7 +139,7 @@ class Modules_Actions
             $item = $record->update($data);
 
             if (!$item) {
-                return sendError('Failed to update module', 500);
+                return error('Failed to update module', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -149,9 +150,9 @@ class Modules_Actions
                 'new_data' => json_encode($record),
             ],'UPDATE-MODULE');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -171,7 +172,7 @@ class Modules_Actions
     }
 
     public static function changeModuleStatus($request_data) {
-        if (denied('change_module_status')) return sendError('Forbidden', 403);
+        if (denied('change_module_status')) return error('Forbidden', 403);
 
         try {
             $validation = self::validateChangeModuleStatus($request_data);
@@ -179,7 +180,7 @@ class Modules_Actions
 
             $model = Modules_Model::whereUrid($request_data['urid'])->first();
             if (!$model) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             $data = $validation['data'];
@@ -191,7 +192,7 @@ class Modules_Actions
             ]);
 
             if (!$item) {
-                return sendError('Failed to change module status', 500);
+                return error('Failed to change module status', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -202,9 +203,9 @@ class Modules_Actions
                 'new_data' => json_encode($model),
             ],'CHANGE-MODULE_STATUS');
 
-            return sendResponse('Success', $model);
+            return success('Success', $model);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 

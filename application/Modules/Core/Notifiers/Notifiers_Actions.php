@@ -18,21 +18,21 @@ class Notifiers_Actions
     private static $TABLE = 'notifiers';
 
     public static function index() {
-        if (denied('view_notifiers')) return sendError('Forbidden', 403);
+        if (denied('view_notifiers')) return error('Forbidden', 403);
         try {
             $all_data = Notifiers_Model
                 ::join('status', 'status.id',self::$TABLE . '.status_id')
                 ->select([self::$TABLE . '.*', 'status.name as status', 'status.color as status_color'])
                 ->get();
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function viewNotifier($urid) {
-        if (denied('view_notifier')) return sendError('Forbidden', 403);
+        if (denied('view_notifier')) return error('Forbidden', 403);
         try {
             $record = Notifiers_Model
                 ::join('status', 'status.id',self::$TABLE . '.status_id')
@@ -40,21 +40,21 @@ class Notifiers_Actions
                 ->where(self::$TABLE .'.urid', $urid)
                 ->first();
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function getNotifierStatuses() {
-        if (denied('view_notifiers')) return sendError('Forbidden', 403);
+        if (denied('view_notifiers')) return error('Forbidden', 403);
 
         try {
             $item = Status_Model::all();
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -85,7 +85,7 @@ class Notifiers_Actions
     }
 
     public static function saveNotifier($request_data) {
-        if (denied('save_notifier')) return sendError('Forbidden', 403);
+        if (denied('save_notifier')) return error('Forbidden', 403);
 
         try {
             $validation = self::validate($request_data);
@@ -97,7 +97,7 @@ class Notifiers_Actions
             $item = Notifiers_Model::create($data);
 
             if (!$item) {
-                return sendError('Failed to save notifier', 500);
+                return error('Failed to save notifier', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -108,18 +108,18 @@ class Notifiers_Actions
                 'new_data' => json_encode($item),
             ],'SAVE-NOTIFIER');
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updateNotifier($request_data, $urid) {
-        if (denied('update_notifier')) return sendError('Forbidden', 403);
+        if (denied('update_notifier')) return error('Forbidden', 403);
         try {
             $record = Notifiers_Model::whereUrid($urid)->first();
             if (!$record) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             $validation = self::validate($request_data, $record);
@@ -132,7 +132,7 @@ class Notifiers_Actions
             $item = $record->update($data);
 
             if (!$item) {
-                return sendError('Failed to update notifier', 500);
+                return error('Failed to update notifier', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -143,18 +143,18 @@ class Notifiers_Actions
                 'new_data' => json_encode($record),
             ],'UPDATE-NOTIFIER');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function deactivateNotifier($urid) {
-        if (denied('deactivate_notifier')) return sendError('Forbidden', 403);
+        if (denied('deactivate_notifier')) return error('Forbidden', 403);
         try {
             $record = Notifiers_Model::whereUrid($urid)->first();
             if (!$record) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             $data['status_id'] = Status::INACTIVE;
@@ -164,7 +164,7 @@ class Notifiers_Actions
             $item = $record->update($data);
 
             if (!$item) {
-                return sendError('Failed to deactivate notifier', 500);
+                return error('Failed to deactivate notifier', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -175,18 +175,18 @@ class Notifiers_Actions
                 'new_data' => json_encode($record),
             ],'DEACTIVATE-NOTIFIER');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function activateNotifier($urid) {
-        if (denied('activate_notifier')) return sendError('Forbidden', 403);
+        if (denied('activate_notifier')) return error('Forbidden', 403);
         try {
             $record = Notifiers_Model::whereUrid($urid)->first();
             if (!$record) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             $data['status_id'] = Status::ACTIVE;
@@ -196,7 +196,7 @@ class Notifiers_Actions
             $item = $record->update($data);
 
             if (!$item) {
-                return sendError('Failed to activate notifier', 500);
+                return error('Failed to activate notifier', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -207,9 +207,9 @@ class Notifiers_Actions
                 'new_data' => json_encode($record),
             ],'ACTIVATE-NOTIFIER');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 

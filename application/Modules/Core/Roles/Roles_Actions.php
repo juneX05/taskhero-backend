@@ -21,7 +21,7 @@ class Roles_Actions
     private static $ACTOR = 'Roles';
 
     public static function index() {
-        if (denied('view_roles')) return sendError('Forbidden', 500);
+        if (denied('view_roles')) return error('Forbidden', 500);
 
         try {
             $all_data = Roles_Model
@@ -29,14 +29,14 @@ class Roles_Actions
                 ->select(['roles.*', 'status.name as status', 'status.color as status_color'])
                 ->get();
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function viewRole($urid) {
-        if (denied('view_role')) return sendError('Forbidden', 500);
+        if (denied('view_role')) return error('Forbidden', 500);
 
         try {
             $record = Roles_Model
@@ -45,7 +45,7 @@ class Roles_Actions
                 ->select(['roles.*', 'status.name as status', 'status.color as status_color'])
                 ->first();
             if (!$record) {
-                return sendError('Record Not found', 404);
+                return error('Record Not found', 404);
             }
 
             $permissions = RolePermissions_Model
@@ -57,9 +57,9 @@ class Roles_Actions
             $all_data['role'] = $record;
             $all_data['permissions'] = $permissions;
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -91,7 +91,7 @@ class Roles_Actions
     }
 
     public static function saveRole($request_data) {
-        if (denied('save_role')) return sendError('Forbidden', 500);
+        if (denied('save_role')) return error('Forbidden', 500);
 
         try {
             $validation = self::validate($request_data);
@@ -102,7 +102,7 @@ class Roles_Actions
             $model = Roles_Model::create($data);
 
             if(!$model) {
-                return sendError('Record not found', 404);
+                return error('Record not found', 404);
             }
 
             logInfo(__FUNCTION__,[
@@ -113,18 +113,18 @@ class Roles_Actions
                 'new_data' => json_encode($model->toArray()),
             ],'SAVE-ROLE');
 
-            return sendResponse('Success', $model);
+            return success('Success', $model);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updateRole($request_data, $urid) {
-        if (denied('update_role')) return sendError('Forbidden', 500);
+        if (denied('update_role')) return error('Forbidden', 500);
 
         try {
             $record = Roles_Model::whereUrid($urid)->first();
-            if (!$record) sendError('Record Not Found', 404);
+            if (!$record) error('Record Not Found', 404);
 
             $validation = self::validate($request_data, $record);
             if (!$validation['status']) return $validation;
@@ -134,7 +134,7 @@ class Roles_Actions
             $updated = $record->update($data);
 
             if(!$updated) {
-                return sendError('Failed to update record', 500);
+                return error('Failed to update record', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -145,14 +145,14 @@ class Roles_Actions
                 'new_data' => json_encode($record->toArray()),
             ],'SAVE-ROLE');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function changeRolePermissions($request_data, $urid) {
-        if (denied('change_role_permissions')) return sendError('Forbidden', 500);
+        if (denied('change_role_permissions')) return error('Forbidden', 500);
 
         try {
             $validation = validateData($request_data, [
@@ -166,17 +166,17 @@ class Roles_Actions
                 ::whereUrid($urid)
                 ->first();
             if (!$role) {
-                return sendError('Role not found.', 404);
+                return error('Role not found.', 404);
             }
 
             if (Auth::id() != 1 && $role->id == 1) {
-                return sendError('You are not allowed.', 403);
+                return error('You are not allowed.', 403);
             }
 
             $result = RolePermissions_Actions::batchUpdateOrSavePermissions($role, $data['permissions']);
 
             if (!$result['status']) {
-                return sendError($result['error'], 500);
+                return error($result['error'], 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -189,31 +189,31 @@ class Roles_Actions
 
             return ['status' => true, 'data' => []];
         } catch (\Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function getRoleStatuses() {
-        if (denied('change_role_status')) return sendError('Forbidden', 403);
+        if (denied('change_role_status')) return error('Forbidden', 403);
 
         try {
             $item = Status_Model::all();
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function activateRole($request_data, $urid) {
-        if (denied('change_role_status')) return sendError('Forbidden', 500);
+        if (denied('change_role_status')) return error('Forbidden', 500);
 
         try {
             $record = Roles_Model::whereUrid($urid)->first();
-            if (!$record) sendError('Record Not Found', 404);
+            if (!$record) error('Record Not Found', 404);
 
             if (Auth::id() != 1 && $record->id == 1) {
-                return sendError('You are not allowed.', 403);
+                return error('You are not allowed.', 403);
             }
 
             $validation = validateData($request_data, [
@@ -230,7 +230,7 @@ class Roles_Actions
             ]);
 
             if(!$updated) {
-                return sendError('Failed to change role status', 500);
+                return error('Failed to change role status', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -241,21 +241,21 @@ class Roles_Actions
                 'new_data' => json_encode($record->toArray()),
             ],'ACTIVATE-ROLE');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function deactivateRole($request_data, $urid) {
-        if (denied('change_role_status')) return sendError('Forbidden', 500);
+        if (denied('change_role_status')) return error('Forbidden', 500);
 
         try {
             $record = Roles_Model::whereUrid($urid)->first();
-            if (!$record) sendError('Record Not Found', 404);
+            if (!$record) error('Record Not Found', 404);
 
             if (Auth::id() != 1 && $record->id == 1) {
-                return sendError('You are not allowed.', 403);
+                return error('You are not allowed.', 403);
             }
 
             $validation = validateData($request_data, [
@@ -272,7 +272,7 @@ class Roles_Actions
             ]);
 
             if(!$updated) {
-                return sendError('Failed to change role status', 500);
+                return error('Failed to change role status', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -283,17 +283,17 @@ class Roles_Actions
                 'new_data' => json_encode($record->toArray()),
             ],'DEACTIVATE-ROLE');
 
-            return sendResponse('Success', $record);
+            return success('Success', $record);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function getRolePermissions($urid) {
-        if (denied('view_role')) return sendError('Forbidden', 500);
+        if (denied('view_role')) return error('Forbidden', 500);
 
         $record = Roles_Model::whereUrid($urid)->first();
-        if (!$record) return sendError('Role not found', 404);
+        if (!$record) return error('Role not found', 404);
 
         $role_permissions = RolePermissions_Model
             ::where('role_id', $record->id)
@@ -306,7 +306,7 @@ class Roles_Actions
 
         $permissions = Permissions_Model::all();
 
-        return sendResponse('Role Permissions', [
+        return success('Role Permissions', [
             'role_permissions' => $role_permissions,
             'all_permissions' => $permissions,
         ]);

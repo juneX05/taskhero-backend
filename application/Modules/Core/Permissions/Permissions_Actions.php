@@ -15,15 +15,15 @@ class Permissions_Actions
     private static $ACTOR = 'Permissions';
 
     public static function index() {
-        if (denied('view_permissions')) return sendError('Forbidden', 403);
+        if (denied('view_permissions')) return error('Forbidden', 403);
         try {
             $all_data = Permissions_Model
                 ::leftJoin('modules','permissions.module_id','=', 'modules.id')
                 ->get(['permissions.*','modules.name as module', 'modules.title as module_title']);
 
-            return sendResponse('Success', $all_data);
+            return success('Success', $all_data);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
@@ -58,7 +58,7 @@ class Permissions_Actions
         $item = Permissions_Model::create($data);
 
         if (!$item) {
-            return sendError('Failed to save permission', 500);
+            return error('Failed to save permission', 500);
         }
 
         RolePermissions_Actions::saveRolePermission([
@@ -71,7 +71,7 @@ class Permissions_Actions
     }
 
     public static function savePermission($request_data) {
-        if (denied('save_permission')) return sendError('Forbidden', 403);
+        if (denied('save_permission')) return error('Forbidden', 403);
 
         try {
             $validation = self::validate($request_data);
@@ -89,19 +89,19 @@ class Permissions_Actions
                 'new_data' => json_encode($item),
             ],'SAVE-PERMISSION');
 
-            return sendResponse('Success', $item);
+            return success('Success', $item);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 
     public static function updatePermission($request_data) {
-        if (denied('update_permission')) return sendError('Forbidden', 403);
+        if (denied('update_permission')) return error('Forbidden', 403);
 
         try {
             $model = Permissions_Model::whereUrid($request_data['urid'])->first();
             if (!$model) {
-                return sendError('Record Not Found', 404);
+                return error('Record Not Found', 404);
             }
 
             $validation = self::validate($request_data, $model);
@@ -114,7 +114,7 @@ class Permissions_Actions
             $updated = $model->update($data);
 
             if (!$updated) {
-                return sendError('Failed to update permission', 500);
+                return error('Failed to update permission', 500);
             }
 
             logInfo(__FUNCTION__,[
@@ -125,9 +125,9 @@ class Permissions_Actions
                 'new_data' => json_encode($model),
             ],'UPDATE-PERMISSION');
 
-            return sendResponse('Success', $model);
+            return success('Success', $model);
         } catch (Exception $exception) {
-            return sendError($exception->getMessage(), 500);
+            return error($exception->getMessage(), 500);
         }
     }
 

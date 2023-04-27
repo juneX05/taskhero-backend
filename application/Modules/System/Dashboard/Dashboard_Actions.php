@@ -23,14 +23,14 @@ class Dashboard_Actions
         return $data;
     }
     public static function dashboard_developer() {
-        return sendResponse('Developer Dashboard', self::data());
+        return success('Developer Dashboard', self::data());
     }
 
     public static function dashboard_super_admin() {
-        return sendResponse('Super Admin Dashboard', self::data());
+        return success('Super Admin Dashboard', self::data());
     }
 
     public static function dashboard_admin() {
-        return sendResponse('Admin Dashboard', self::data());
+        return success('Admin Dashboard', self::data());
     }
 }

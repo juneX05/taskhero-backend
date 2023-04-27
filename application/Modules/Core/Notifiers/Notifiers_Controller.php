@@ -11,33 +11,40 @@ class Notifiers_Controller extends BaseController
 
     public function index()
     {
-        return Notifiers_Actions::index();
+        $result = Notifiers_Actions::index();
+        return sendResponse($result);
     }
 
     public function view($urid)
     {
-        return Notifiers_Actions::viewNotifier($urid);
+        $result = Notifiers_Actions::viewNotifier($urid);
+        return sendResponse($result);
     }
 
     public function statuses()
     {
-        return Notifiers_Actions::getNotifierStatuses();
+        $result = Notifiers_Actions::getNotifierStatuses();
+        return sendResponse($result);
     }
 
     public function save(Request $request) {
-       return Notifiers_Actions::saveNotifier($request->all());
+       $result = Notifiers_Actions::saveNotifier($request->all());
+        return sendResponse($result);
     }
 
     public function update(Request $request, $urid) {
-        return Notifiers_Actions::updateNotifier($request->all(), $urid);
+        $result = Notifiers_Actions::updateNotifier($request->all(), $urid);
+        return sendResponse($result);
     }
 
     public function deactivate($urid) {
-        return Notifiers_Actions::deactivateNotifier($urid);
+        $result = Notifiers_Actions::deactivateNotifier($urid);
+        return sendResponse($result);
     }
 
     public function activate($urid) {
-        return Notifiers_Actions::activateNotifier($urid);
+        $result = Notifiers_Actions::activateNotifier($urid);
+        return sendResponse($result);
     }
 
 }
