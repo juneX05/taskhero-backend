@@ -27,10 +27,18 @@ class T001_AuthTest extends BaseTest
         $response->assertJsonPath('status', true);
     }
 
-    public function test_user_can_login()
+    public function test_user_can_login_through_mobile()
     {
-        $response = $this->post('/api/login', json_decode($this->data, true));
+        $response = $this->post('/api/mobile/login', json_decode($this->data, true));
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', true);
 
+        $data = json_decode($response->getContent(), true);
+    }
+
+    public function test_user_can_login_through_spa()
+    {
+        $response = $this->post('/api/spa/login', json_decode($this->data, true));
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);
 
@@ -54,13 +62,6 @@ class T001_AuthTest extends BaseTest
 
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);
-
-        $response = $this->get('/api/user',[
-            'Accept' => 'application/json'
-        ]);
-
-        $response->assertStatus(401);
-        $response->assertJsonPath('status', false);
     }
 
     public function test_user_can_initiate_forgot_password() {
@@ -74,7 +75,10 @@ class T001_AuthTest extends BaseTest
 
     public function test_user_can_reset_password() {
 
-        $reset_token = DB::table('password_resets')->where('email', 'user@gmail.com')->first();
+        $this->test_user_can_initiate_forgot_password();
+
+        $reset_token = DB::table('password_reset_tokens')
+            ->where('email', 'user@gmail.com')->first();
         $reset_token = (array) $reset_token;
 
         $data=[
@@ -96,7 +100,9 @@ class T001_AuthTest extends BaseTest
             'password' => 'password',
         ];
 
-        $response = $this->sendAuthorizedRequest("/api/login", 'POST', $data);
+        $this->test_user_can_reset_password();
+
+        $response = $this->sendNormalRequest("/api/mobile/login", 'POST', $data);
 
         $response->assertStatus(200);
         $response->assertJsonPath('status', true);

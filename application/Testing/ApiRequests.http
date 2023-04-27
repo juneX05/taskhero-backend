@@ -1,0 +1,129 @@
+### Registration
+POST http://127.0.0.1:8000/api/register
+Content-Type: application/json
+Accept: application/json
+#Authorization:
+
+{
+    "email": "new_user@gmail.com",
+    "name": "New User",
+    "password": "newpassword",
+    "confirm_password": "newpassword"
+}
+
+### Login
+POST http://127.0.0.1:8000/api/mobile/login
+Content-Type: application/json
+Accept: application/json
+#Authorization:
+
+{
+    "email": "admin@gmail.com",
+    "password": "secretss"
+}
+
+### current loggedin user
+GET http://127.0.0.1:8000/api/user
+Content-Type: application/json
+Accept: application/json
+#Authorization: Bearer 1|rtjZv1wqNjKwwB870UAYFUkA0qSKk3V1DVmvEXjm
+
+### LOGOUT
+POST http://127.0.0.1:8000/api/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|rtjZv1wqNjKwwB870UAYFUkA0qSKk3V1DVmvEXjm
+
+
+### CHANGE USER PERMISSIONS
+POST http://127.0.0.1:8000/api/users/93a858376a3fa7a63d69cd406f794f33503a641f/change-permissions
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|SSrPwnbyNtQk0w6OcpmWFmgr4P11RVAWBXJ5D8kC
+
+{
+    "permissions": {
+        "1": "denied",
+        "2": "denied",
+        "3": "denied",
+        "4": "denied",
+        "5": "denied",
+        "6": "given",
+        "7": "given",
+        "8": "given",
+        "9": "given",
+        "10": "given",
+        "11": "given",
+        "12": "given",
+        "13": "given",
+        "14": "given",
+        "15": "given",
+        "16": "given",
+        "17": "given",
+        "18": "given",
+        "19": "given",
+        "20": "given",
+        "21": "given",
+        "22": "given",
+        "23": "given",
+        "24": "given",
+        "25": "given",
+        "26": "given",
+        "27": "given",
+        "28": "given",
+        "29": "given",
+        "30": "given",
+        "31": "given",
+        "32": "given",
+        "33": "given",
+        "34": "given",
+        "35": "given",
+        "36": "given",
+        "37": "given"
+    }
+}
+
+### SEED MODULE PERMISSION
+POST http://127.0.0.1:8000/api/modules/seed
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|7DeQ3SBj6gCjCG2JX4nOPps0wbddLFbomWTpkt2t
+
+{
+    "module": "Projects"
+}
+
+### GET TASK HISTORY
+GET http://127.0.0.1:8000/api/logs/Tasks/7e82dace0426da81d9861aaff0ef1e581df5d625/history
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 4|VWqb79B9KhuyICVCPRcSVEPbmG3T46nIYKXaFCiQ
+
+
+### UPDATE TASK
+POST http://127.0.0.1:8000/api/tasks/cf2b8ccd05f152287c5e0a0ad4024e40d27006d5/update
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 5|oObhuU8f5UfiRCWj110X2VReC4JYoAEsdZvxU9mv
+
+{
+    "title": "System Development Task",
+    "description": "Very Great task",
+    "assigned": [
+        "abde295164a726212c99dd2d7783601e1a27e0e5",
+        "b801d52c539a7c97d4872150defb16709edee8a6",
+        "195475864f5cdac168ed795801cb5d59fbe334e9",
+        "1faa6a9baa4f67b58e003f8997f127dbf507284c"
+    ],
+    "priority_id": "9f4ce224a71b94c7d5bbb85fb3ff10b2a94b382e",
+    "project_id": "8ca32e7361a92c145ec3d0e21ddbcf20d08505b5",
+    "task_tags": [
+        "80f69e3d00af0bce0b2fa2957d9d88176f4a624f",
+        "42594e140c2ca3159f2d4a16150d8b4d587d9aa7"
+    ],
+    "start_date": "2023-04-01",
+    "end_date": "2023-04-08"
+}
+
+
+

@@ -36,8 +36,17 @@ function logInfo($tag, $data, $action_type = 'LOG')
  *
  * @return \Illuminate\Http\JsonResponse
  */
-function sendResponse($message, $result = [], $callback = null)
+function sendResponse($result)
 {
+    if ($result['status']) {
+        return response()->json($result);
+    }
+
+    return sendErrorResponse($result['error']);
+
+}
+
+function sendSuccessResponse($message, $result = []) {
     $response = [
         'status' => true,
         'message' => $message,
@@ -47,21 +56,7 @@ function sendResponse($message, $result = [], $callback = null)
 
     $response['data'] = $result;
 
-    $request_response = response()->json($response);
-    if ($callback instanceof Closure){
-        return response()->withShutdownTask($request_response, $callback);
-    }
-    return $request_response;
-}
-
-/**
- * return error response.
- *
- * @return \Illuminate\Http\JsonResponse
- */
-function sendError($error, $code)
-{
-    return sendErrorResponse(['type' => $error]);
+    return response()->json($response);
 }
 
 /**
@@ -72,6 +67,7 @@ function sendErrorResponse($errorBag)
 {
     $request_id = Logs::$REQUEST_ID;
 
+    $code = 500;
     if (gettype($errorBag) == 'string') {
         $message = $errorBag;
         $type = 'Error';
@@ -80,6 +76,7 @@ function sendErrorResponse($errorBag)
         $type = $errorBag['type'] ?? 'Error';
         $message = $errorBag['error'] ?? '';
         $data = $errorBag['data'] ?? [];
+        $code = $errorBag['code'] ?? $code;
     }
 
     switch ($type) {
@@ -103,9 +100,6 @@ function sendErrorResponse($errorBag)
             if (env('APP_ENV') != 'local')
                 $message = 'An Error Occurred. Please contact administrator.';
             break;
-
-        default:
-            $code = 500;
     }
 
     $message .= " | REQUEST-ID({$request_id})";
@@ -261,10 +255,18 @@ function verifyRequest() {
     return false;
 }
 
-function error($error) {
+function error($error, $code = null) {
+
+    if ($code == null) {
+        return [
+            'status' => false,
+            'error' => $error
+        ];
+    }
+
     return [
         'status' => false,
-        'error' => $error
+        'error' => ['error' => $error, 'code' => $code]
     ];
 }
 

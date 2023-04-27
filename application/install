@@ -1,0 +1,206 @@
+#!/usr/bin/env php
+<?php
+
+if (file_exists('installed')) {
+    $answer = ASK("Do you want to reinstall system? yes/no \n");
+    if ($answer != 'yes') {
+        echo "Exiting... ";
+        exit;
+    }
+}
+
+INSTALL_LARAVEL();
+APPEND_SERVICE_PROVIDER();
+UPDATE_COMPOSER_JSON_FILE();
+PREPARE_TEST_ENVIRONMENT();
+
+$VARIABLES = GET_DB_CONNECTION();
+
+PREPARE_ENV_FILE();
+UPDATE_ENV($VARIABLES);
+
+MIGRATE_AND_SEED();
+FLAG_INSTALLED();
+
+function ASK($question) {
+    echo $question;
+    return rtrim(fgets(STDIN));
+}
+
+function GET_DB_CONNECTION() {
+    $VARIABLES['DB_CONNECTION'] = ASK("What is your database connection, sqlsrv, mysql, postgres, sqlite? ");
+    $VARIABLES['DB_HOST'] = ASK("What is your database host? ");
+    $VARIABLES['DB_PORT'] = ASK("What is your database port? ");
+
+    $sqlite_path_hint = $VARIABLES['DB_CONNECTION'] == 'sqlite'
+        ? "!! PUT FULL ABSOLUTE PATH FOR THIS TO WORK.!! \n"
+        : "";
+
+    $VARIABLES['DB_DATABASE'] = ASK("What is your database name? " . $sqlite_path_hint);
+    $VARIABLES['DB_USERNAME'] = ASK("What is your database user? ");
+    $VARIABLES['DB_PASSWORD'] = ASK("What is your database password? ");
+
+    return $VARIABLES;
+}
+
+function INSTALL_LARAVEL() {
+    system('composer create-project --prefer-dist laravel/laravel laravel_app', $result_code);
+
+    if ($result_code != 0) {
+        echo "Failed to INSTALL LARAVEL.";
+        exit;
+    }
+
+    //credits: https://gist.github.com/baamenabar/f0ee62fd42fed31b60ce
+    $dir = "./laravel_app";//"path/to/targetFiles";
+    $dirNew = "./";//path/to/destination/files
+    // Open a known directory, and proceed to read its contents
+    if (is_dir($dir)) {
+        if ($dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+                if ($file==".") continue;
+                if ($file=="..")continue;
+                if (!rename($dir.'/'.$file,$dirNew.'/'.$file)) {
+                    echo "Failed to copy file/directory : $dirNew/$file";
+                }
+            }
+            closedir($dh);
+
+            rmdir($dir);
+        }
+    }
+}
+
+function APPEND_SERVICE_PROVIDER() {
+    $filename = "./config/app.php";
+    $app_php = (file_get_contents($filename));
+
+    $app = str_replace("
+        /*
+         * Package Service Providers...
+         */"
+        ,"
+        /*
+         * Package Service Providers...
+         */
+         Application\\ApplicationServiceProvider::class,"
+        ,$app_php);
+
+    file_put_contents($filename, $app);
+}
+
+function UPDATE_COMPOSER_JSON_FILE() {
+
+    $content = json_decode(file_get_contents("./composer.json"), true);
+    $content['autoload']['psr-4']["Application\\"] = "application/";
+    $content['autoload']['files'][] = "application/helpers.php";
+
+    $content = str_replace('\/', '/', json_encode($content, JSON_PRETTY_PRINT));
+    file_put_contents("./composer.json", $content);
+
+    system("composer require doctrine/dbal");
+    system("composer require-dev barryvdh/laravel-ide-helper");
+}
+
+function PREPARE_ENV_FILE() {
+    if (file_exists('.env')) return;
+
+    //get env.example
+    $contents = file_get_contents('.env.example');
+
+    file_put_contents('.env', $contents);
+
+}
+
+function MIGRATE_AND_SEED() {
+
+    system('php artisan migrate:fresh --path=application/Modules/Core/Logs/Migrations/logs --database=db_log', $result);
+    if ($result != 0) exit;
+
+    system('php artisan migrate:fresh', $result);
+    if ($result != 0) exit;
+
+    system('php artisan db:seed Application\Modules\SystemSeeder', $result);
+    if ($result != 0) exit;
+}
+
+function UPDATE_ENV($data = array())
+{
+    if (!count($data)) {
+        return;
+    }
+
+    $pattern = '/([^\=]*)\=[^\n]*/';
+
+    $envFile = '.env';
+    $lines = file($envFile);
+    $newLines = [];
+    foreach ($lines as $line) {
+        preg_match($pattern, $line, $matches);
+
+        if (!count($matches)) {
+            $newLines[] = $line;
+            continue;
+        }
+
+        if (!key_exists(trim($matches[1]), $data)) {
+            $newLines[] = $line;
+            continue;
+        }
+
+        $line = trim($matches[1]) . "={$data[trim($matches[1])]}\n";
+        $newLines[] = $line;
+    }
+
+    $newContent = implode('', $newLines);
+    file_put_contents($envFile, $newContent);
+}
+
+//CREDITS: https://stackoverflow.com/questions/1191167/format-output-of-simplexml-asxml
+function PREPARE_TEST_ENVIRONMENT() {
+    $php_unit_xml = simplexml_load_file("./phpunit.xml");
+    $test_suites = $php_unit_xml->testsuites;
+    //->addAttribute("name","ApplicationAcceptance")
+    $test_suites->addChild("testsuite")
+        ->addChild("directory", "./application/Testing/Acceptance")
+        ->addAttribute("suffix", "Test.php");
+
+    $test_suites_children = $php_unit_xml->testsuites->children();
+    $test_suites_children[$test_suites_children->count() - 1]
+        ->addAttribute("name", "ApplicationAcceptance");
+
+    $test_suites->addChild("testsuite")
+        ->addChild("directory", "./application/Testing/Unit")
+        ->addAttribute("suffix", "Test.php");
+
+    $test_suites_children = $php_unit_xml->testsuites->children();
+    $test_suites_children[$test_suites_children->count() - 1]
+        ->addAttribute("name", "ApplicationUnit");
+
+    $child = $php_unit_xml->php->addChild("env");
+    $child->addAttribute("name", "DB_CONNECTION");
+    $child->addAttribute("value", "sqlite");
+
+    $child = $php_unit_xml->php->addChild("env");
+    $child->addAttribute("name", "DB_DATABASE");
+    $child->addAttribute("value", "./database/database_testing.sqlite");
+
+    $child = $php_unit_xml->php->addChild("env");
+    $child->addAttribute("name", "LOG_DB_DATABASE");
+    $child->addAttribute("value", "db_log_testing.sqlite");
+
+    $dom = new DOMDocument;
+    $dom->preserveWhiteSpace = false;
+    $dom->formatOutput = true;
+    $dom->loadXML($php_unit_xml->asXML());
+
+    file_put_contents("./phpunit.xml", $dom->saveXML());
+}
+
+function FLAG_INSTALLED() {
+    file_put_contents('installed', 'SYSTEM INSTALLED SUCCESSFULLY');
+}
+
+
+
+
