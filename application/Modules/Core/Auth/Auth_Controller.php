@@ -4,46 +4,54 @@
 namespace Application\Modules\Core\Auth;
 
 
-use Application\Modules\Core\Menus\Menus_Actions;
-use Application\Modules\Core\Menus\Menus_Model;
-use Application\Modules\Core\Roles\_Modules\RolePermissions\RolePermissions_Model;
-use Application\Modules\Core\Users\_Modules\UserPermissions\UserPermissions_Model;
-use Application\Modules\Core\Users\_Modules\UserRoles\UserRoles_Model;
-use Application\Modules\Core\Users\Users_Model;
+use Application\Modules\Core\Auth\Actions\ForgotPassword;
+use Application\Modules\Core\Auth\Actions\GetCurrentLoggedInUser;
+use Application\Modules\Core\Auth\Actions\Login;
+use Application\Modules\Core\Auth\Actions\Logout;
+use Application\Modules\Core\Auth\Actions\Register;
+use Application\Modules\Core\Auth\Actions\ResetPassword;
 use Illuminate\Http\Request;
 use Application\Modules\BaseController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class Auth_Controller extends BaseController
 {
 
     public function mobileLogin(Request $request) {
-        return Auth_Actions::mobileLogin($request->all());
+        $result = Login::boot($request->all(), 'mobile');
+        return sendResponse($result);
     }
 
     public function login(Request $request) {
-        return Auth_Actions::login($request->all());
+        $result = Login::boot($request->all(), 'spa');
+        return sendResponse($result);
     }
 
     public function logout() {
-        return Auth_Actions::logout();
+        $result = Logout::boot();
+        return sendResponse($result);
     }
 
     public function user() {
-        return Auth_Actions::currentUser();
+        $result = GetCurrentLoggedInUser::boot();
+        return sendResponse($result);
     }
 
     //https://victorighalo.medium.com/custom-password-reset-in-laravel-21e57816989f
     public function forgotPassword(Request $request) {
-        return Auth_Actions::forgotPassword($request->all());
+        $result = ForgotPassword::boot($request->all());
+        return sendResponse($result);
+
     }
 
     public function resetPassword(Request $request) {
-        return Auth_Actions::resetPassword($request->all());
+        $result = ResetPassword::boot($request->all());
+        return sendResponse($result);
+
     }
 
     public function register(Request $request) {
-        return Auth_Actions::register($request->all());
+        $result = Register::boot($request->all());
+        return sendResponse($result);
+
     }
 }
