@@ -135,7 +135,7 @@ class Users_Actions
                 'password_confirmation' => ['required','same:password'],
             ]);
 
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 
@@ -171,7 +171,7 @@ class Users_Actions
                 'password_confirmation' => ['required','same:password'],
             ]);
 
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 
@@ -220,7 +220,7 @@ class Users_Actions
             $validation = validateData($request_data, [
                 'permissions' => ['required', 'array'],
             ]);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 
@@ -262,7 +262,7 @@ class Users_Actions
             $validation = validateData($request_data, [
                 'roles' => ['required', 'array'],
             ]);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 

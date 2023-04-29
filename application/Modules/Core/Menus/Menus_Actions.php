@@ -86,7 +86,7 @@ class Menus_Actions
 
         try {
             $validation = self::validate($data);
-            if(!$validation['status']) return sendValidationError($validation['error']);
+            if(!$validation['status']) return error($validation);
 
             $data = $validation['data'];
             $item = Menus_Model::create($data);
@@ -174,7 +174,7 @@ class Menus_Actions
             if (!$record) return error('Record not found', 404);
 
             $validation = self::validate($data, $record);
-            if(!$validation['status']) return sendValidationError($validation['error']);
+            if(!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 
@@ -238,7 +238,7 @@ class Menus_Actions
             if (!$model) return error('Menu Not found', 404);
 
             $validation = self::validateUpdatePositions($data);
-            if(!$validation['status']) return sendValidationError($validation['error']);
+            if(!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\Core;
 
 use Application\Testing\BaseTest;
 

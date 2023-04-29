@@ -1,5 +1,5 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\Core;
 
 use Application\Modules\Core\Users\Users_Model;
 use Application\Testing\BaseTest;
@@ -182,7 +182,7 @@ class T006_UsersTest extends BaseTest
 
     public function test_complete_new_user_registration()
     {
-        $this->test_add_new_user();
+//        $this->test_add_new_user();
 
         $user = Users_Model::whereEmail('newbornuser@gmail.com')->first();
         $urid = $user->urid;
@@ -200,7 +200,7 @@ class T006_UsersTest extends BaseTest
 
     public function test_login_after_complete_registration()
     {
-        $this->test_complete_new_user_registration();
+//        $this->test_complete_new_user_registration();
 
         $data = [
             'email' => 'newbornuser@gmail.com',

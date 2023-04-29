@@ -158,7 +158,7 @@ class Roles_Actions
             $validation = validateData($request_data, [
                 'permissions' => ['required', 'array'],
             ]);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 

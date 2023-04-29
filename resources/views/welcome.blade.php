@@ -1,2 +1,2 @@
 <?php
-include public_path("/index.html")
+include public_path("/index.html");

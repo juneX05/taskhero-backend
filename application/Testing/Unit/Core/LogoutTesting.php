@@ -1,8 +1,7 @@
 <?php
 
-namespace Application\Testing\Unit;
+namespace Application\Testing\Unit\Core;
 
-use Application\Modules\Core\Users\Users_Model;
 use Application\Testing\BaseTest;
 
 class LogoutTesting extends BaseTest

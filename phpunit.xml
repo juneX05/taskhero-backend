@@ -7,11 +7,17 @@
     <testsuite name="Feature">
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
-    <testsuite name="ApplicationAcceptance">
-      <directory suffix="Test.php">./application/Testing/Acceptance</directory>
+    <testsuite name="ApplicationAcceptanceCore">
+      <directory suffix="Test.php">./application/Testing/Acceptance/Core</directory>
     </testsuite>
-    <testsuite name="ApplicationUnit">
-      <directory suffix="Test.php">./application/Testing/Unit</directory>
+    <testsuite name="ApplicationAcceptanceSystem">
+      <directory suffix="Test.php">./application/Testing/Acceptance/System</directory>
+    </testsuite>
+    <testsuite name="ApplicationUnitCore">
+      <directory suffix="Test.php">./application/Testing/Unit/Core</directory>
+    </testsuite>
+    <testsuite name="ApplicationUnitSystem">
+      <directory suffix="Test.php">./application/Testing/Unit/System</directory>
     </testsuite>
   </testsuites>
   <source>

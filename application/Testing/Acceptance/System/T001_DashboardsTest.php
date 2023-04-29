@@ -1,12 +1,9 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\System;
 
-use Application\Modules\Core\Users\Users_Model;
 use Application\Testing\BaseTest;
-use function PHPUnit\Framework\assertArrayHasKey;
-use function PHPUnit\Framework\assertEquals;
 
-class T008_DashboardsTest extends BaseTest
+class T001_DashboardsTest extends BaseTest
 {
     public function test_view_dashboard()
     {

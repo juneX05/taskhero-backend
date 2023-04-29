@@ -75,7 +75,7 @@ class Permissions_Actions
 
         try {
             $validation = self::validate($request_data);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 
@@ -105,7 +105,7 @@ class Permissions_Actions
             }
 
             $validation = self::validate($request_data, $model);
-            if (!$validation['status']) return sendValidationError($validation['error']);
+            if (!$validation['status']) return error($validation);
 
             $data = $validation['data'];
 

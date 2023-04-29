@@ -1,5 +1,5 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\Core;
 
 use Application\Modules\Core\Roles\Roles_Model;
 use Application\Testing\BaseTest;
@@ -65,7 +65,7 @@ class T005_RolesTest extends BaseTest
 
     public function test_updating_role()
     {
-        $this->test_creating_new_role();
+//        $this->test_creating_new_role();
 
         $new_data = Roles_Model::whereName('new_role')
             ->first()->toArray();

@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return \Illuminate\Support\Facades\DB::table('users')->get()->toArray();
-});
+Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '^(?!api).*$');

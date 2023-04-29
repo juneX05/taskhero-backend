@@ -1,10 +1,7 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\Core;
 
-use Application\Modules\Core\Users\Users_Model;
 use Application\Testing\BaseTest;
-use function PHPUnit\Framework\assertArrayHasKey;
-use function PHPUnit\Framework\assertEquals;
 
 class T007_NotifiersTest extends BaseTest
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Testing\Acceptance;
+namespace Application\Testing\Acceptance\Core;
 
 use Application\Modules\Core\Permissions\Permissions_Model;
 use Application\Testing\BaseTest;
@@ -44,7 +44,7 @@ class T004_PermissionsTest extends BaseTest
 
     public function test_updating_permission()
     {
-        $this->test_creating_new_permission();
+//        $this->test_creating_new_permission();
 
         $new_data = Permissions_Model::whereName('new_permission')
             ->first()->toArray();

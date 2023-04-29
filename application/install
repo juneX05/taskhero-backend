@@ -1,206 +1,276 @@
 #!/usr/bin/env php
 <?php
+class INSTALLER {
+    private $DIR = __DIR__;
 
-if (file_exists('installed')) {
-    $answer = ASK("Do you want to reinstall system? yes/no \n");
-    if ($answer != 'yes') {
-        echo "Exiting... ";
-        exit;
-    }
-}
-
-INSTALL_LARAVEL();
-APPEND_SERVICE_PROVIDER();
-UPDATE_COMPOSER_JSON_FILE();
-PREPARE_TEST_ENVIRONMENT();
-
-$VARIABLES = GET_DB_CONNECTION();
-
-PREPARE_ENV_FILE();
-UPDATE_ENV($VARIABLES);
-
-MIGRATE_AND_SEED();
-FLAG_INSTALLED();
-
-function ASK($question) {
-    echo $question;
-    return rtrim(fgets(STDIN));
-}
-
-function GET_DB_CONNECTION() {
-    $VARIABLES['DB_CONNECTION'] = ASK("What is your database connection, sqlsrv, mysql, postgres, sqlite? ");
-    $VARIABLES['DB_HOST'] = ASK("What is your database host? ");
-    $VARIABLES['DB_PORT'] = ASK("What is your database port? ");
-
-    $sqlite_path_hint = $VARIABLES['DB_CONNECTION'] == 'sqlite'
-        ? "!! PUT FULL ABSOLUTE PATH FOR THIS TO WORK.!! \n"
-        : "";
-
-    $VARIABLES['DB_DATABASE'] = ASK("What is your database name? " . $sqlite_path_hint);
-    $VARIABLES['DB_USERNAME'] = ASK("What is your database user? ");
-    $VARIABLES['DB_PASSWORD'] = ASK("What is your database password? ");
-
-    return $VARIABLES;
-}
-
-function INSTALL_LARAVEL() {
-    system('composer create-project --prefer-dist laravel/laravel laravel_app', $result_code);
-
-    if ($result_code != 0) {
-        echo "Failed to INSTALL LARAVEL.";
-        exit;
-    }
-
-    //credits: https://gist.github.com/baamenabar/f0ee62fd42fed31b60ce
-    $dir = "./laravel_app";//"path/to/targetFiles";
-    $dirNew = "./";//path/to/destination/files
-    // Open a known directory, and proceed to read its contents
-    if (is_dir($dir)) {
-        if ($dh = opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-                if ($file==".") continue;
-                if ($file=="..")continue;
-                if (!rename($dir.'/'.$file,$dirNew.'/'.$file)) {
-                    echo "Failed to copy file/directory : $dirNew/$file";
-                }
+    public function __construct() {
+        echo "CURRENT WORKING DIRECTORY: " . $this->DIR . "\n\n";
+        if (file_exists('installed')) {
+            $answer = $this->ASK("Do you want to reinstall system? yes/no \n");
+            if ($answer != 'yes') {
+                echo "Exiting... ";
+                exit;
             }
-            closedir($dh);
+        }
 
-            rmdir($dir);
+        $this->INSTALL_LARAVEL();
+        $this->PREPARE_LARAVEL_FILES();
+        $this->UPDATE_COMPOSER_JSON_FILE();
+        $this->APPEND_SERVICE_PROVIDER();
+        $this->PREPARE_TEST_ENVIRONMENT();
+
+        $VARIABLES = $this->GET_DB_CONNECTION();
+
+        $this->PREPARE_ENV_DATA();
+        $this->UPDATE_ENV($VARIABLES);
+
+        $this->MIGRATE_AND_SEED();
+        $this->FLAG_INSTALLED();
+    }
+
+    function ASK($question) {
+        echo $question;
+        return rtrim(fgets(STDIN));
+    }
+
+    function GET_DB_CONNECTION() {
+        $VARIABLES['DB_CONNECTION'] = $this->ASK("What is your database connection, sqlsrv, mysql, postgres, sqlite? ");
+        $VARIABLES['DB_HOST'] = $this->ASK("What is your database host? ");
+        $VARIABLES['DB_PORT'] = $this->ASK("What is your database port? ");
+
+        $sqlite_path_hint = $VARIABLES['DB_CONNECTION'] == 'sqlite'
+            ? "!! PUT FULL ABSOLUTE PATH FOR THIS TO WORK.!! \n"
+            : "";
+
+        $VARIABLES['DB_DATABASE'] = $this->ASK("What is your database name? " . $sqlite_path_hint);
+        $VARIABLES['DB_USERNAME'] = $this->ASK("What is your database user? ");
+        $VARIABLES['DB_PASSWORD'] = $this->ASK("What is your database password? ");
+
+        return $VARIABLES;
+    }
+
+    function INSTALL_LARAVEL() {
+        system('composer create-project --prefer-dist laravel/laravel:^10.1.x laravel_app', $result_code);
+
+        if ($result_code != 0) {
+            echo "Failed to INSTALL LARAVEL.";
+            exit;
         }
     }
-}
 
-function APPEND_SERVICE_PROVIDER() {
-    $filename = "./config/app.php";
-    $app_php = (file_get_contents($filename));
+    function PREPARE_LARAVEL_FILES() {
+        //credits: https://gist.github.com/baamenabar/f0ee62fd42fed31b60ce
+        $dir = "./laravel_app";//"path/to/targetFiles";
+        $dirNew = "./";//path/to/destination/files
+        // Open a known directory, and proceed to read its contents
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    if ($file==".") continue;
+                    if ($file=="..")continue;
+                    if (!rename($dir.'/'.$file,$dirNew.'/'.$file)) {
+                        echo "Failed to copy file/directory : $dirNew/$file \n";
+                    }
+                }
+                closedir($dh);
 
-    $app = str_replace("
+                rmdir($dir);
+            }
+        }
+
+        $filename = "./routes/api.php";
+        $file = (file_get_contents($filename));
+
+        $app = str_replace('Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+    return $request->user();
+});'
+            ,'//Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request \$request) {
+//    return \$request->user();
+//});'
+            ,$file);
+
+        file_put_contents($filename, $app);
+
+
+        $filename = "./routes/web.php";
+        $file = (file_get_contents($filename));
+
+        $app = str_replace("Route::get('/', function () {
+    return view('welcome');
+});"
+            ,"Route::get('/{any}', function () {
+    return view('welcome');
+})->where('any', '^(?!api).*$');"
+            ,$file);
+
+        file_put_contents($filename, $app);
+
+        $filename = "./resources/views/welcome.blade.php";
+
+        $app = '<?php
+include public_path("/index.html");';
+
+        file_put_contents($filename, $app);
+    }
+
+    function APPEND_SERVICE_PROVIDER() {
+        $filename = "./config/app.php";
+        $app_php = (file_get_contents($filename));
+
+        $app = str_replace("
         /*
          * Package Service Providers...
          */"
-        ,"
+            ,"
         /*
          * Package Service Providers...
          */
          Application\\ApplicationServiceProvider::class,"
-        ,$app_php);
+            ,$app_php);
 
-    file_put_contents($filename, $app);
-}
-
-function UPDATE_COMPOSER_JSON_FILE() {
-
-    $content = json_decode(file_get_contents("./composer.json"), true);
-    $content['autoload']['psr-4']["Application\\"] = "application/";
-    $content['autoload']['files'][] = "application/helpers.php";
-
-    $content = str_replace('\/', '/', json_encode($content, JSON_PRETTY_PRINT));
-    file_put_contents("./composer.json", $content);
-
-    system("composer require doctrine/dbal");
-    system("composer require-dev barryvdh/laravel-ide-helper");
-}
-
-function PREPARE_ENV_FILE() {
-    if (file_exists('.env')) return;
-
-    //get env.example
-    $contents = file_get_contents('.env.example');
-
-    file_put_contents('.env', $contents);
-
-}
-
-function MIGRATE_AND_SEED() {
-
-    system('php artisan migrate:fresh --path=application/Modules/Core/Logs/Migrations/logs --database=db_log', $result);
-    if ($result != 0) exit;
-
-    system('php artisan migrate:fresh', $result);
-    if ($result != 0) exit;
-
-    system('php artisan db:seed Application\Modules\SystemSeeder', $result);
-    if ($result != 0) exit;
-}
-
-function UPDATE_ENV($data = array())
-{
-    if (!count($data)) {
-        return;
+        file_put_contents($filename, $app);
     }
 
-    $pattern = '/([^\=]*)\=[^\n]*/';
+    function UPDATE_COMPOSER_JSON_FILE() {
 
-    $envFile = '.env';
-    $lines = file($envFile);
-    $newLines = [];
-    foreach ($lines as $line) {
-        preg_match($pattern, $line, $matches);
+        system("composer require --dev barryvdh/laravel-ide-helper");
+        system('php artisan vendor:publish --provider="Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider" --tag=config');
 
-        if (!count($matches)) {
-            $newLines[] = $line;
-            continue;
-        }
+        $filename = "./config/ide-helper.php";
+        $ide_helper_php = file_get_contents($filename);
 
-        if (!key_exists(trim($matches[1]), $data)) {
-            $newLines[] = $line;
-            continue;
-        }
+        $ide_helper_php = str_replace("    'include_fluent' => false,", "    'include_fluent' => true,", $ide_helper_php);
+        $ide_helper_php = str_replace("    'include_helpers' => false,", "    'include_helpers' => true,", $ide_helper_php);
+        $ide_helper_php = str_replace("    'model_locations' => [
+        'app',
+    ],", "    'model_locations' => [
+        'app',
+        'application/Modules'
+    ],", $ide_helper_php);
 
-        $line = trim($matches[1]) . "={$data[trim($matches[1])]}\n";
-        $newLines[] = $line;
+        file_put_contents($filename, $ide_helper_php);
+
+        $content = json_decode(file_get_contents("./composer.json"), true);
+        $content['autoload']['psr-4']["Application\\"] = "application/";
+        $content['autoload']['files'][] = "application/helpers.php";
+        $content['scripts']["post-update-cmd"][] = "@php artisan ide-helper:generate";
+
+        $content = str_replace('\/', '/', json_encode($content, JSON_PRETTY_PRINT));
+        file_put_contents("./composer.json", $content);
+
+        system("composer require doctrine/dbal");
     }
 
-    $newContent = implode('', $newLines);
-    file_put_contents($envFile, $newContent);
-}
+    function PREPARE_ENV_DATA() {
+
+    }
+
+    function MIGRATE_AND_SEED() {
+
+        system('php artisan migrate:fresh --path=application/Modules/Core/Logs/Migrations/logs --database=db_log', $result);
+        if ($result != 0) exit;
+
+        system('php artisan migrate:fresh', $result);
+        if ($result != 0) exit;
+
+        system('php artisan db:seed Application\Modules\SystemSeeder', $result);
+        if ($result != 0) exit;
+    }
+
+    function UPDATE_ENV($data = array())
+    {
+        if (!count($data)) {
+            return;
+        }
+
+        $pattern = '/([^\=]*)\=[^\n]*/';
+
+        $envFile = '.env';
+        $lines = file($envFile);
+        $newLines = [];
+        foreach ($lines as $line) {
+            preg_match($pattern, $line, $matches);
+
+            if (!count($matches)) {
+                $newLines[] = $line;
+                continue;
+            }
+
+            if (!key_exists(trim($matches[1]), $data)) {
+                $newLines[] = $line;
+                continue;
+            }
+
+            $line = trim($matches[1]) . "={$data[trim($matches[1])]}\n";
+            $newLines[] = $line;
+        }
+
+        $newLines[] = "\n";
+        $newLines[] = 'ALLOWED_ORIGINS="localhost:5173"';
+        $newLines[] = "\n";
+        $newLines[] = 'SESSION_DOMAIN="localhost"';
+        $newLines[] = "\n";
+        $newLines[] = 'SANCTUM_STATEFUL_DOMAINS="localhost:5173"';
+
+        $newContent = implode('', $newLines);
+        file_put_contents($envFile, $newContent);
+    }
 
 //CREDITS: https://stackoverflow.com/questions/1191167/format-output-of-simplexml-asxml
-function PREPARE_TEST_ENVIRONMENT() {
-    $php_unit_xml = simplexml_load_file("./phpunit.xml");
-    $test_suites = $php_unit_xml->testsuites;
-    //->addAttribute("name","ApplicationAcceptance")
-    $test_suites->addChild("testsuite")
-        ->addChild("directory", "./application/Testing/Acceptance")
-        ->addAttribute("suffix", "Test.php");
+    function PREPARE_TEST_ENVIRONMENT() {
+        $php_unit_xml = simplexml_load_file("./phpunit.xml");
+        $test_suites = $php_unit_xml->testsuites;
 
-    $test_suites_children = $php_unit_xml->testsuites->children();
-    $test_suites_children[$test_suites_children->count() - 1]
-        ->addAttribute("name", "ApplicationAcceptance");
+        //Prepare Test Suites.
+        $test_suite = $test_suites->addChild("testsuite");
+        $test_suite->addAttribute("name", "ApplicationAcceptanceCore");
+        $directory = $test_suite->addChild("directory", "./application/Testing/Acceptance/Core");
+        $directory->addAttribute("suffix", "Test.php");
 
-    $test_suites->addChild("testsuite")
-        ->addChild("directory", "./application/Testing/Unit")
-        ->addAttribute("suffix", "Test.php");
+        $test_suite = $test_suites->addChild("testsuite");
+        $test_suite->addAttribute("name", "ApplicationAcceptanceSystem");
+        $directory = $test_suite->addChild("directory", "./application/Testing/Acceptance/System");
+        $directory->addAttribute("suffix", "Test.php");
 
-    $test_suites_children = $php_unit_xml->testsuites->children();
-    $test_suites_children[$test_suites_children->count() - 1]
-        ->addAttribute("name", "ApplicationUnit");
+        $test_suite = $test_suites->addChild("testsuite");
+        $test_suite->addAttribute("name", "ApplicationUnitCore");
+        $directory = $test_suite->addChild("directory", "./application/Testing/Unit/Core");
+        $directory->addAttribute("suffix", "Test.php");
 
-    $child = $php_unit_xml->php->addChild("env");
-    $child->addAttribute("name", "DB_CONNECTION");
-    $child->addAttribute("value", "sqlite");
+        $test_suite = $test_suites->addChild("testsuite");
+        $test_suite->addAttribute("name", "ApplicationUnitSystem");
+        $directory = $test_suite->addChild("directory", "./application/Testing/Unit/System");
+        $directory->addAttribute("suffix", "Test.php");
 
-    $child = $php_unit_xml->php->addChild("env");
-    $child->addAttribute("name", "DB_DATABASE");
-    $child->addAttribute("value", "./database/database_testing.sqlite");
+        //Prepare Environment Variables
+        $child = $php_unit_xml->php->addChild("env");
+        $child->addAttribute("name", "DB_CONNECTION");
+        $child->addAttribute("value", "sqlite");
 
-    $child = $php_unit_xml->php->addChild("env");
-    $child->addAttribute("name", "LOG_DB_DATABASE");
-    $child->addAttribute("value", "db_log_testing.sqlite");
+        $child = $php_unit_xml->php->addChild("env");
+        $child->addAttribute("name", "DB_DATABASE");
+        $child->addAttribute("value", "./database/database_testing.sqlite");
 
-    $dom = new DOMDocument;
-    $dom->preserveWhiteSpace = false;
-    $dom->formatOutput = true;
-    $dom->loadXML($php_unit_xml->asXML());
+        $child = $php_unit_xml->php->addChild("env");
+        $child->addAttribute("name", "LOG_DB_DATABASE");
+        $child->addAttribute("value", "db_log_testing.sqlite");
 
-    file_put_contents("./phpunit.xml", $dom->saveXML());
+        // Beautify XML
+        $dom = new DOMDocument;
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($php_unit_xml->asXML());
+
+        file_put_contents("./phpunit.xml", $dom->saveXML());
+    }
+
+    function FLAG_INSTALLED() {
+        file_put_contents('installed', 'SYSTEM INSTALLED SUCCESSFULLY');
+
+        system("composer dump-autoload");
+        echo "\nSYSTEM INSTALLED SUCCESSFULLY\n";
+    }
 }
 
-function FLAG_INSTALLED() {
-    file_put_contents('installed', 'SYSTEM INSTALLED SUCCESSFULLY');
-}
-
-
-
+(new INSTALLER());
 
